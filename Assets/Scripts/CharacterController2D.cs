@@ -18,6 +18,9 @@ public class CharacterController2D : MonoBehaviour {
     Vector2 lookDirection;
 
     public DebugCircle myCircle;
+    [HideInInspector] public DebugCircle secondCircle;
+    [HideInInspector] public bool singlePlayerMode = false;
+    private bool circleToggle = false;
 
     //float timeSinceGrounded = 5.0f;
     bool grounded = false;
@@ -80,16 +83,28 @@ public class CharacterController2D : MonoBehaviour {
         freezeTimer -= Time.deltaTime;
         controlsActive = freezeTimer < 0.0f;
 
-        if (myCircle) {
-            if (playerInput.currentControlScheme == "Keyboard&Mouse") { // skip this shit if on keyb
+        // Single player: toggle between circles with left click
+        if (singlePlayerMode && secondCircle != null) {
+            var mouse = Mouse.current;
+            if (mouse != null && mouse.leftButton.wasPressedThisFrame) {
+                circleToggle = !circleToggle;
+                // Swap z-order to show active circle on top
+                if (myCircle) myCircle.transform.position = new Vector3(myCircle.transform.position.x, myCircle.transform.position.y, circleToggle ? -1 : -2);
+                if (secondCircle) secondCircle.transform.position = new Vector3(secondCircle.transform.position.x, secondCircle.transform.position.y, circleToggle ? -2 : -1);
+            }
+        }
+
+        // Move active circle
+        DebugCircle activeCircle = (singlePlayerMode && circleToggle) ? secondCircle : myCircle;
+        if (activeCircle) {
+            if (playerInput.currentControlScheme == "Keyboard&Mouse") {
                 var mouse = Mouse.current;
                 myLook = Camera.main.ScreenToWorldPoint(mouse.position.ReadValue());
             }
             else {
                 myLook += lookDirection * 0.075f;
             }
-            //Vector3 pos = Camera.main.ScreenToWorldPoint(myLook);
-            myCircle.SetPosition(new Vector3(myLook.x, myLook.y, -2));
+            activeCircle.SetPosition(new Vector3(myLook.x, myLook.y, activeCircle.transform.position.z));
         }
 
         if (controlsActive) {

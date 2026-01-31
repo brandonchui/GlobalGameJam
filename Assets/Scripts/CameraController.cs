@@ -7,6 +7,7 @@ public class CameraController : MonoBehaviour {
     [Header("Camera Settings")]
     public float minZoom = 5f;
     public float maxZoom = 15f;
+    public float singlePlayerZoom = 10f;
     public float zoomPadding = 3f;
     public float smoothTime = 0.2f;
 
@@ -68,7 +69,8 @@ public class CameraController : MonoBehaviour {
     }
 
     private float GetRequiredZoom() {
-        if (players.Length == 1) return minZoom;
+        // Use wider zoom for single player
+        if (!GameManager.IsCoop) return singlePlayerZoom;
 
         Bounds bounds = new Bounds(players[0].position, Vector3.zero);
         foreach (var player in players) {
