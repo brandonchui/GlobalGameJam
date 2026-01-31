@@ -5,6 +5,10 @@ public class LevelGen : MonoBehaviour {
     public GameObject redPrefab;
     public GameObject normalPrefab;
     public GameObject ground;
+    public GameObject enemyPrefab;
+
+    [Range(0f, 1f)]
+    public float enemySpawnChance = 0.1f;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
@@ -19,6 +23,12 @@ public class LevelGen : MonoBehaviour {
                 bool widerOrTall = Random.value < 0.55f;
                 Vector2 size = new Vector2(widerOrTall ? Random.Range(2.0f, scale) : 1, !widerOrTall ? Random.Range(2.0f, scale) : 1);
                 SetSize(go, size);
+
+                // Spawn enemy on platform
+                if (enemyPrefab != null && Random.value < enemySpawnChance) {
+                    Vector3 enemyPos = go.transform.position + Vector3.up * (size.y / 2f + 0.5f);
+                    Instantiate(enemyPrefab, enemyPos, Quaternion.identity, transform);
+                }
             }
         }
 
