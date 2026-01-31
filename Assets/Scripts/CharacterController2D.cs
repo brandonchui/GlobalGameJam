@@ -14,14 +14,13 @@ public class CharacterController2D : MonoBehaviour {
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
     public float jumpPower = 10.0f;
+    Vector2 myLook;
+    Vector2 lookDirection;
 
-    public DebugCircle circle1;
-    public DebugCircle circle2;
-    bool circleToggle = false;
+    public DebugCircle myCircle;
+
     //float timeSinceGrounded = 5.0f;
     bool grounded = false;
-
-    public TextMeshProUGUI heightText;
 
     private void Awake() {
         rigid = GetComponent<Rigidbody2D>();
@@ -33,11 +32,24 @@ public class CharacterController2D : MonoBehaviour {
         playerInput.actions["Move"].performed += OnMovePerformed;
         playerInput.actions["Move"].canceled += OnMoveCanceled;
         playerInput.actions["Jump"].performed += OnJumpPerformed;
+        playerInput.actions["Look"].performed += OnLookPerformed;
+        playerInput.actions["Look"].canceled += OnLookCanceled;
     }
+
     private void OnDisable() {
         playerInput.actions["Move"].performed -= OnMovePerformed;
         playerInput.actions["Move"].canceled -= OnMoveCanceled;
         playerInput.actions["Jump"].performed -= OnJumpPerformed;
+        playerInput.actions["Look"].performed -= OnLookPerformed;
+        playerInput.actions["Look"].canceled -= OnLookCanceled;
+    }
+
+    private void OnLookPerformed(InputAction.CallbackContext context) {
+        lookDirection = context.ReadValue<Vector2>();
+    }
+
+    private void OnLookCanceled(InputAction.CallbackContext context) {
+        lookDirection = Vector2.zero;
     }
 
     private void OnJumpPerformed(InputAction.CallbackContext context) {
@@ -63,25 +75,16 @@ public class CharacterController2D : MonoBehaviour {
         cam = new Vector3(me.x, me.y, cam.z);
         Camera.main.transform.position = cam;
 
-        heightText.SetText(me.y.ToString("F1") + "m");
-
-        var mouse = Mouse.current;
-        if (mouse != null) {
-            if (circle1 && circle2) {
-                Vector3 mousePos = Camera.main.ScreenToWorldPoint(mouse.position.ReadValue());
-
-                Vector3 circle1pos = circle1.transform.position;
-                Vector3 circle2pos = circle2.transform.position;
-                circle1pos.z = circleToggle ? -2 : -1;
-                circle2pos.z = circleToggle ? -1 : -2;
-                circle1.transform.position = circle1pos;
-                circle2.transform.position = circle2pos;
-                var circ = circleToggle ? circle1 : circle2;
-                circ.SetPosition(new Vector3(mousePos.x, mousePos.y, -2));
+        if (myCircle) {
+            if (playerInput.currentControlScheme == "Keyboard&Mouse") { // skip this shit if on keyb
+                var mouse = Mouse.current;
+                myLook = Camera.main.ScreenToWorldPoint(mouse.position.ReadValue());
             }
-            if (mouse.leftButton.wasPressedThisFrame) {
-                circleToggle = !circleToggle;
+            else {
+                myLook += lookDirection * 0.075f;
             }
+            //Vector3 pos = Camera.main.ScreenToWorldPoint(myLook);
+            myCircle.SetPosition(new Vector3(myLook.x, myLook.y, -2));
         }
 
         Vector3 v = rigid.linearVelocity;

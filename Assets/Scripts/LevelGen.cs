@@ -4,6 +4,7 @@ public class LevelGen : MonoBehaviour {
     public GameObject greenPrefab;
     public GameObject redPrefab;
     public GameObject normalPrefab;
+    public GameObject ground;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
@@ -29,6 +30,8 @@ public class LevelGen : MonoBehaviour {
         GameObject rightWall = Instantiate(normalPrefab, transform);
         rightWall.transform.position = new Vector3(width / 2.0f, height / 2.0f, 0) * scale;
         SetSize(rightWall, new Vector2(1, height*scale));
+
+        SetSize(ground, new Vector2(width * scale + 1, 1));
     }
 
     void SetSize(GameObject go, Vector2 size) {
