@@ -80,11 +80,6 @@ public class CharacterController2D : MonoBehaviour {
         freezeTimer -= Time.deltaTime;
         controlsActive = freezeTimer < 0.0f;
 
-        Vector3 cam = Camera.main.transform.position;
-        Vector3 me = transform.position;
-        cam = new Vector3(me.x, me.y, cam.z);
-        Camera.main.transform.position = cam;
-
         if (myCircle) {
             if (playerInput.currentControlScheme == "Keyboard&Mouse") { // skip this shit if on keyb
                 var mouse = Mouse.current;
