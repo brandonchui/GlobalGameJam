@@ -8,6 +8,21 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
+  - enabled: 1
+    path: Assets/Scenes/Leaderboard.unity
+    guid: 00ab693a9304f4bef99dfd6bf3689d13
+  - enabled: 1
+    path: Assets/Scenes/Main.unity
+    guid: 66b6c606052104fb18a83806babc05c2
+  - enabled: 1
+    path: Assets/Scenes/Credits.unity
+    guid: 5b7a0106917e742cd966dfeff2e54af5
+  - enabled: 1
+    path: Assets/Scenes/Menu.unity
+    guid: 41e59d2e11ec64a2aad2f9466265048e
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: a4be8fadfc2ed4a8ba18273aac0b3919
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: a7d5bfc7224c54631a2a11693c7ad7a6, type: 2}
     UnityEditor.XR.ARKit.ARKitSettings: {fileID: 11400000, guid: 5719c200066094d60824aa3e78971958, type: 2}
