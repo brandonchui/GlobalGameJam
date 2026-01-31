@@ -199,6 +199,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
+  - component: {fileID: 519420033}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -324,6 +325,29 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &519420033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 519420028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcde8fbf78a5ec74b9a57723c4630ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FollowCam
+  player1: {fileID: 2139159853}
+  player2: {fileID: 1060370852}
+  offset: {x: 0, y: 0, z: -10}
+  positionSmoothTime: 0.2
+  minZoom: 2
+  maxZoom: 10
+  zoomLimiter: 10
+  zoomSmoothTime: 0.2
+  padding: 0
+  positionSnapThreshold: 0.01
+  zoomSnapThreshold: 0.01
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -545,6 +569,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 921695060}
   m_CullTransparentMesh: 1
+--- !u!4 &1060370852 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 662281299975824856, guid: 24a3d4b21e4a9ef4682004a6fee3e036, type: 3}
+  m_PrefabInstance: {fileID: 7511309008298896326}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1492947370
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,7 +608,6 @@ MonoBehaviour:
   - {fileID: 434983892}
   - {fileID: 1715274705}
   heightText: {fileID: 921695062}
-  players: []
 --- !u!4 &1492947372
 Transform:
   m_ObjectHideFlags: 0
@@ -611,6 +639,8 @@ MonoBehaviour:
   redPrefab: {fileID: 3070264843781295276, guid: 93fc28d7f66135048a6d8181800a19e3, type: 3}
   normalPrefab: {fileID: 3070264843781295276, guid: e5a486e623d5ee64e856a64e2b302e2c, type: 3}
   ground: {fileID: 1570193664}
+  enemyPrefab: {fileID: 2921915131566053004, guid: 204a3e3c869064bbdaee33cb383c1fb0, type: 3}
+  enemySpawnChance: 1
 --- !u!1 &1498930793
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,6 +1028,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!4 &2139159853 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6391418125054923966, guid: 81b8a6de1fb538143a310e395741dab2, type: 3}
+  m_PrefabInstance: {fileID: 7082233434071403400}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7082233434071403400
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1054,10 +1089,6 @@ PrefabInstance:
       propertyPath: myCircle
       value: 
       objectReference: {fileID: 1715274705}
-    - target: {fileID: 6554232756214057286, guid: 81b8a6de1fb538143a310e395741dab2, type: 3}
-      propertyPath: heightText
-      value: 
-      objectReference: {fileID: 921695062}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

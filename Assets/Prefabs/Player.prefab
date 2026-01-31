@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6554232756214057286}
   m_Layer: 6
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -158,7 +158,6 @@ MonoBehaviour:
   moveSpeed: 10
   jumpPower: 15
   myCircle: {fileID: 0}
-  heightText: {fileID: 0}
 --- !u!1 &4012910049245349894
 GameObject:
   m_ObjectHideFlags: 0

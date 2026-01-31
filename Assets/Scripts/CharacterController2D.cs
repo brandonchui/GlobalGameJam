@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
 public class CharacterController2D : MonoBehaviour {
-    Rigidbody2D rigid;
+    public Rigidbody2D rigid { get;  private set; }
     Collider2D col;
     private PlayerInput playerInput;
     private Vector2 moveInput;
@@ -53,7 +53,7 @@ public class CharacterController2D : MonoBehaviour {
     }
 
     private void OnJumpPerformed(InputAction.CallbackContext context) {
-        if (grounded) {
+        if (grounded && controlsActive) {
             Vector3 v = rigid.linearVelocity;
             v.y = jumpPower;
             rigid.linearVelocity = v;
@@ -69,7 +69,17 @@ public class CharacterController2D : MonoBehaviour {
         moveInput = Vector2.zero;
     }
 
+    bool controlsActive = true;
+    float freezeTimer = 0f;
+    public void FreezeControls(float time) {
+        freezeTimer = time;
+        controlsActive = false;
+    }
+
     private void Update() {
+        freezeTimer -= Time.deltaTime;
+        controlsActive = freezeTimer < 0.0f;
+
         Vector3 cam = Camera.main.transform.position;
         Vector3 me = transform.position;
         cam = new Vector3(me.x, me.y, cam.z);
@@ -87,10 +97,11 @@ public class CharacterController2D : MonoBehaviour {
             myCircle.SetPosition(new Vector3(myLook.x, myLook.y, -2));
         }
 
-        Vector3 v = rigid.linearVelocity;
-        v.x = moveInput.x * moveSpeed;
-
-        rigid.linearVelocity = v;
+        if (controlsActive) {
+            Vector3 v = rigid.linearVelocity;
+            v.x = moveInput.x * moveSpeed;
+            rigid.linearVelocity = v;
+        }
 
         var hits = Physics2D.BoxCastAll(col.bounds.center, col.bounds.size * 0.95f, 0, Vector2.down, 0.2f, groundMask);
         grounded = hits.Length > 0;
