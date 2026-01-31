@@ -69,8 +69,15 @@ public class CharacterController2D : MonoBehaviour {
         if (mouse != null) {
             if (circle1 && circle2) {
                 Vector3 mousePos = Camera.main.ScreenToWorldPoint(mouse.position.ReadValue());
+
+                Vector3 circle1pos = circle1.transform.position;
+                Vector3 circle2pos = circle2.transform.position;
+                circle1pos.z = circleToggle ? -2 : -1;
+                circle2pos.z = circleToggle ? -1 : -2;
+                circle1.transform.position = circle1pos;
+                circle2.transform.position = circle2pos;
                 var circ = circleToggle ? circle1 : circle2;
-                circ.SetPosition(new Vector3(mousePos.x, mousePos.y, 0));
+                circ.SetPosition(new Vector3(mousePos.x, mousePos.y, -2));
             }
             if (mouse.leftButton.wasPressedThisFrame) {
                 circleToggle = !circleToggle;
@@ -82,7 +89,7 @@ public class CharacterController2D : MonoBehaviour {
 
         rigid.linearVelocity = v;
 
-        var hits = Physics2D.BoxCastAll(col.bounds.center, col.bounds.size*0.95f, 0, Vector2.down, 0.2f, groundMask);
+        var hits = Physics2D.BoxCastAll(col.bounds.center, col.bounds.size * 0.95f, 0, Vector2.down, 0.2f, groundMask);
         grounded = hits.Length > 0;
         //timeSinceGrounded = hits.Length > 0 ? 0.0f : timeSinceGrounded + Time.deltaTime;
     }

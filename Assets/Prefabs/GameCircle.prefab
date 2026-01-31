@@ -46,4 +46,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DebugCircle
   radius: 3
   segments: 32
-  color: {r: 1, g: 0.008902086, b: 0, a: 1}
+  color: {r: 0.17222834, g: 1, b: 0, a: 1}
