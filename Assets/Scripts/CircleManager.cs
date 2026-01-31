@@ -11,16 +11,24 @@ public class CircleManager : MonoBehaviour {
 
     CharacterController2D[] players;
 
+    public static CircleManager instance;
+
+    public void Awake() {
+        instance = this;
+    }
+
+    public float maxHeightBaby { get; private set; }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
         Application.targetFrameRate = 240;
         players = FindObjectsByType<CharacterController2D>(FindObjectsSortMode.None);
+        maxHeightBaby = Mathf.NegativeInfinity;
     }
 
     // Update is called once per frame
     void Update() {
-        float maxHeightBaby = Mathf.NegativeInfinity;
-        foreach(var p in players) {
+        foreach (var p in players) {
             maxHeightBaby = Mathf.Max(maxHeightBaby, p.transform.position.y);
         }
         heightText.SetText(maxHeightBaby.ToString("F1") + "m");
