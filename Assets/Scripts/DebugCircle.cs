@@ -33,7 +33,7 @@ public class DebugCircle : MonoBehaviour
         {
             float x = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
             float y = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
-            lineRenderer.SetPosition(i, new Vector3(x, y, 0));
+            lineRenderer.SetPosition(i, new Vector3(x, y, transform.position.z));
             angle += 360f / segments;
         }
     }
