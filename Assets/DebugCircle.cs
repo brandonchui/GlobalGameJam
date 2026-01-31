@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class DebugCircle : MonoBehaviour
 {
@@ -38,6 +39,14 @@ public class DebugCircle : MonoBehaviour
 
     void Update()
     {
+        // Drag circle with mouse
+        var mouse = Mouse.current;
+        if (mouse != null && mouse.leftButton.isPressed)
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(mouse.position.ReadValue());
+            transform.position = new Vector3(mousePos.x, mousePos.y, 0);
+        }
+
         // Update circle if radius changes in inspector
         if (lineRenderer != null)
         {

@@ -3,9 +3,8 @@ Shader "Custom/CircleDetect"
     Properties
     {
         _InsideColor ("Inside Color", Color) = (0, 1, 0, 1)
-        _OutsideColor ("Outside Color", Color) = (1, 0, 0, 1)
-        _CircleCenter ("Circle Center", Vector) = (0, 0, 0, 0)
-        _CircleRadius ("Circle Radius", Float) = 1
+        _OverlapColor ("Overlap Color (2+ circles)", Color) = (1, 1, 0, 1)
+        _CircleCount ("Circle Count", Int) = 0
     }
     SubShader
     {
@@ -31,9 +30,10 @@ Shader "Custom/CircleDetect"
             };
 
             float4 _InsideColor;
-            float4 _OutsideColor;
-            float4 _CircleCenter;
-            float _CircleRadius;
+            float4 _OverlapColor;
+            int _CircleCount;
+            float4 _CircleCenters[10]; // Support up to 10 circles
+            float _CircleRadii[10];
 
             v2f vert(appdata v)
             {
@@ -45,9 +45,23 @@ Shader "Custom/CircleDetect"
 
             fixed4 frag(v2f i) : SV_Target
             {
-                float dist = distance(i.worldPos.xy, _CircleCenter.xy);
-                if (dist > _CircleRadius)
-                    discard; // Make outside pixels invisible
+                int insideCount = 0;
+
+                for (int c = 0; c < _CircleCount; c++)
+                {
+                    float dist = distance(i.worldPos.xy, _CircleCenters[c].xy);
+                    if (dist <= _CircleRadii[c])
+                    {
+                        insideCount++;
+                    }
+                }
+
+                if (insideCount == 0)
+                    discard;
+
+                if (insideCount >= 2)
+                    return _OverlapColor;
+
                 return _InsideColor;
             }
             ENDCG

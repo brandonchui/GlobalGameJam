@@ -1,20 +1,16 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TestObject : MonoBehaviour
 {
     public Color insideColor = Color.green;
-    public Color outsideColor = Color.red;
+    public Color overlapColor = Color.yellow;
 
     private SpriteRenderer spriteRenderer;
-    private MaterialPropertyBlock propBlock;
-    private DebugCircle circle;
+    private DebugCircle[] circles;
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        circle = FindFirstObjectByType<DebugCircle>();
-        propBlock = new MaterialPropertyBlock();
 
         if (spriteRenderer == null)
         {
@@ -32,22 +28,28 @@ public class TestObject : MonoBehaviour
 
     void Update()
     {
-        if (circle == null || spriteRenderer == null) return;
+        if (spriteRenderer == null) return;
 
-        // Drag with mouse for testing
-        var mouse = Mouse.current;
-        if (mouse != null && mouse.leftButton.isPressed)
-        {
-            Vector3 mousePos = Camera.main.ScreenToWorldPoint(mouse.position.ReadValue());
-            transform.position = new Vector3(mousePos.x, mousePos.y, 0);
-        }
+        // Find all circles each frame (in case they're added/removed)
+        circles = FindObjectsByType<DebugCircle>(FindObjectsSortMode.None);
 
-        // Update shader with circle info
         Material mat = spriteRenderer.material;
         mat.SetColor("_InsideColor", insideColor);
-        mat.SetColor("_OutsideColor", outsideColor);
-        mat.SetVector("_CircleCenter", circle.transform.position);
-        mat.SetFloat("_CircleRadius", circle.radius);
+        mat.SetColor("_OverlapColor", overlapColor);
+        mat.SetInt("_CircleCount", circles.Length);
+
+        // Pass circle data as arrays
+        Vector4[] centers = new Vector4[10];
+        float[] radii = new float[10];
+
+        for (int i = 0; i < circles.Length && i < 10; i++)
+        {
+            centers[i] = circles[i].transform.position;
+            radii[i] = circles[i].radius;
+        }
+
+        mat.SetVectorArray("_CircleCenters", centers);
+        mat.SetFloatArray("_CircleRadii", radii);
     }
 
     Sprite CreateDefaultSprite()
