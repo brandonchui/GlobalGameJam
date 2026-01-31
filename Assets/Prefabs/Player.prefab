@@ -154,7 +154,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterController2D
   groundMask:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 65
   moveSpeed: 10
   jumpPower: 15
   myCircle: {fileID: 0}

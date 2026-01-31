@@ -104,7 +104,15 @@ public class CharacterController2D : MonoBehaviour {
         }
 
         var hits = Physics2D.BoxCastAll(col.bounds.center, col.bounds.size * 0.95f, 0, Vector2.down, 0.2f, groundMask);
-        grounded = hits.Length > 0;
+        grounded = false;
+        for (int i = 0; i < hits.Length; i++) {
+            var hit = hits[i];
+            if(hit.collider != col) {
+                grounded = true;
+                break;
+            }
+        }
+        //grounded = hits.Length > 0;
         //timeSinceGrounded = hits.Length > 0 ? 0.0f : timeSinceGrounded + Time.deltaTime;
     }
 }
