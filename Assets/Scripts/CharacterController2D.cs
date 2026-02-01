@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
 public class CharacterController2D : MonoBehaviour {
+    public GameObject hitParticlesPrefab;
     public Rigidbody2D rigid { get;  private set; }
     Collider2D col;
     private PlayerInput playerInput;
@@ -176,5 +177,12 @@ public class CharacterController2D : MonoBehaviour {
         }
         //grounded = hits.Length > 0;
         //timeSinceGrounded = hits.Length > 0 ? 0.0f : timeSinceGrounded + Time.deltaTime;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if(collision.gameObject.CompareTag("Platform")) {
+            var contact = collision.GetContact(0);
+            Instantiate(hitParticlesPrefab, contact.point, Quaternion.FromToRotation(Vector3.up, contact.normal));
+        }
     }
 }

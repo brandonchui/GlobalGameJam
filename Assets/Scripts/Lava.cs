@@ -20,7 +20,7 @@ public class Lava : MonoBehaviour {
     void Update() {
         transform.Translate(new Vector3(0, riseSpeed * Time.deltaTime, 0));
         riseSpeed += Time.deltaTime * 0.0025f;
-        Debug.Log(riseSpeed);
+        // Debug.Log(riseSpeed);
     }
 
     private void OnTriggerEnter2D(Collider2D collider) {
