@@ -32,8 +32,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SetupPlayers() {
-        // Find existing players in scene
+        // Find existing players in scene, sorted by name for consistent ordering
         var existingPlayers = GameObject.FindGameObjectsWithTag("Player");
+        System.Array.Sort(existingPlayers, (a, b) => a.name.CompareTo(b.name));
+
         if (existingPlayers.Length > 0) player1 = existingPlayers[0];
         if (existingPlayers.Length > 1) player2 = existingPlayers[1];
 
