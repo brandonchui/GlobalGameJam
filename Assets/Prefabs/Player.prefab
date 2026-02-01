@@ -128,7 +128,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.05}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -138,7 +138,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.8, y: 1}
+  m_Size: {x: 0.8, y: 1.1}
   m_EdgeRadius: 0
 --- !u!114 &6554232756214057286
 MonoBehaviour:
@@ -158,6 +158,15 @@ MonoBehaviour:
   moveSpeed: 10
   jumpPower: 15
   myCircle: {fileID: 0}
+  secondCircle: {fileID: 0}
+  singlePlayerMode: 0
+  idleSprite: {fileID: 979828251366776429, guid: e3a0d4d101b51284e8274d0585839f39, type: 3}
+  jumpSprite: {fileID: 8214870140776952008, guid: ca50c8853a77f574c9d9d62b51d3f129, type: 3}
+  runSprites:
+  - {fileID: -605188913255303650, guid: c7ab83c6bcce1814ea9dbab121ff63a7, type: 3}
+  - {fileID: 7122444422892522834, guid: a81e8a00e878e304198bed3c45ce2adf, type: 3}
+  - {fileID: 21300000, guid: d8280c84d825601498a60f5753803ec3, type: 3}
+  - {fileID: 4879623617679983331, guid: 33b2bbd58ba93de458aa15591f62d703, type: 3}
 --- !u!1 &4012910049245349894
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +194,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.75, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6391418125054923966}
@@ -239,8 +248,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: -1
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 7891212841475532503, guid: cf9eb6542f666234ebfb3cd46d036d84, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 979828251366776429, guid: e3a0d4d101b51284e8274d0585839f39, type: 3}
+  m_Color: {r: 1, g: 0.63207537, b: 0.63207537, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -919,7 +928,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0.5, z: 0}
+    m_Position: {x: 0, y: 0.46, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 0
@@ -1000,7 +1009,7 @@ ParticleSystem:
     sphericalDirectionAmount: 0
     randomPositionAmount: 0
     radius:
-      value: 0.37
+      value: 0.26
       mode: 0
       spread: 0
       speed:

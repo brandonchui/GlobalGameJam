@@ -22,6 +22,21 @@ public class CharacterController2D : MonoBehaviour {
     [HideInInspector] public bool singlePlayerMode = false;
     private bool circleToggle = false;
 
+    SpriteRenderer sr;
+    public Sprite idleSprite;
+    public Sprite jumpSprite;
+    public Sprite[] runSprites;
+
+    private enum AnimState {
+        IDLE,
+        JUMP,
+        RUN
+    }
+    bool facing = false;
+    float runTimer = 0.0f;
+
+    AnimState animState;
+
     //float timeSinceGrounded = 5.0f;
     bool grounded = false;
 
@@ -29,6 +44,7 @@ public class CharacterController2D : MonoBehaviour {
         rigid = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         playerInput = GetComponent<PlayerInput>();
+        sr = GetComponentInChildren<SpriteRenderer>();
     }
 
     private void OnEnable() {
@@ -112,6 +128,42 @@ public class CharacterController2D : MonoBehaviour {
             v.x = moveInput.x * moveSpeed;
             rigid.linearVelocity = v;
         }
+        if (grounded) {
+            if (moveInput.sqrMagnitude > 0.01) {
+                if(animState != AnimState.RUN) {
+                    runTimer = 0.0f;
+                }
+                else {
+                    runTimer += Time.deltaTime;
+                }
+                animState = AnimState.RUN;
+            }
+            else {
+                animState = AnimState.IDLE;
+            }
+        }
+        else {
+            animState = AnimState.JUMP;
+        }
+        if (moveInput.x != 0.0f) {
+            facing = moveInput.x < 0.0f;
+        }
+
+        switch (animState) {
+            case AnimState.IDLE:
+                sr.sprite = idleSprite;
+                break;
+            case AnimState.JUMP:
+                sr.sprite = jumpSprite;
+                break;
+            case AnimState.RUN:
+                int i = (int)(runTimer / 0.1f) % runSprites.Length;
+                sr.sprite = runSprites[i];
+                break;
+        }
+        Vector3 scale = sr.transform.localScale;
+        scale.x = facing ? Mathf.Abs(scale.x) : -Mathf.Abs(scale.x);
+        sr.transform.localScale = scale;
 
         var hits = Physics2D.BoxCastAll(col.bounds.center, col.bounds.size * 0.95f, 0, Vector2.down, 0.2f, groundMask);
         grounded = false;

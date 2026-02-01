@@ -338,8 +338,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   players: []
-  minZoom: 5
-  maxZoom: 15
+  minZoom: 7
+  maxZoom: 50
   singlePlayerZoom: 10
   zoomPadding: 3
   smoothTime: 0.2
