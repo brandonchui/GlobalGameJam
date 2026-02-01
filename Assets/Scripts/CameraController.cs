@@ -35,10 +35,10 @@ public class CameraController : MonoBehaviour {
     private void LateUpdate() {
         if (players == null || players.Length == 0) return;
 
-        // Filter out null/destroyed players
+        // Filter out null/destroyed/inactive players
         int activeCount = 0;
         foreach (var p in players) {
-            if (p != null) activeCount++;
+            if (p != null && p.gameObject.activeInHierarchy) activeCount++;
         }
         if (activeCount == 0) return;
 
@@ -55,13 +55,19 @@ public class CameraController : MonoBehaviour {
     }
 
     private Vector3 GetCenterPoint() {
-        if (players.Length == 1 && players[0] != null) {
-            return players[0].position;
+        // Find first active player for initial bounds
+        Transform firstActive = null;
+        foreach (var p in players) {
+            if (p != null && p.gameObject.activeInHierarchy) {
+                firstActive = p;
+                break;
+            }
         }
+        if (firstActive == null) return transform.position;
 
-        Bounds bounds = new Bounds(players[0].position, Vector3.zero);
+        Bounds bounds = new Bounds(firstActive.position, Vector3.zero);
         foreach (var player in players) {
-            if (player != null) {
+            if (player != null && player.gameObject.activeInHierarchy) {
                 bounds.Encapsulate(player.position);
             }
         }
@@ -72,9 +78,19 @@ public class CameraController : MonoBehaviour {
         // Use wider zoom for single player
         if (!GameManager.IsCoop) return singlePlayerZoom;
 
-        Bounds bounds = new Bounds(players[0].position, Vector3.zero);
+        // Find first active player for initial bounds
+        Transform firstActive = null;
+        foreach (var p in players) {
+            if (p != null && p.gameObject.activeInHierarchy) {
+                firstActive = p;
+                break;
+            }
+        }
+        if (firstActive == null) return minZoom;
+
+        Bounds bounds = new Bounds(firstActive.position, Vector3.zero);
         foreach (var player in players) {
-            if (player != null) {
+            if (player != null && player.gameObject.activeInHierarchy) {
                 bounds.Encapsulate(player.position);
             }
         }

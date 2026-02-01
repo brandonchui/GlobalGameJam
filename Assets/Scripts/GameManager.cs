@@ -62,18 +62,36 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SetupSinglePlayerMode() {
-        // Single player controls both circles with toggle
-        if (player1 != null) {
-            var controller = player1.GetComponent<CharacterController2D>();
+        // Find the keyboard player
+        GameObject keyboardPlayer = null;
+        GameObject otherPlayer = null;
+
+        var allPlayers = GameObject.FindGameObjectsWithTag("Player");
+        foreach (var p in allPlayers) {
+            var input = p.GetComponent<PlayerInput>();
+            if (input != null && input.currentControlScheme == "Keyboard&Mouse") {
+                keyboardPlayer = p;
+            } else {
+                otherPlayer = p;
+            }
+        }
+
+        // Fallback to player1 if no keyboard player found
+        if (keyboardPlayer == null) keyboardPlayer = player1;
+
+        // Setup keyboard player with both circles
+        if (keyboardPlayer != null) {
+            var controller = keyboardPlayer.GetComponent<CharacterController2D>();
             if (controller != null) {
                 controller.myCircle = circle1;
                 controller.secondCircle = circle2;
                 controller.singlePlayerMode = true;
             }
         }
-        // Disable second player if exists
-        if (player2 != null) {
-            player2.SetActive(false);
+
+        // Disable the other player
+        if (otherPlayer != null) {
+            otherPlayer.SetActive(false);
         }
     }
 
