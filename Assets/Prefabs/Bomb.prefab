@@ -92,6 +92,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9e79238ad6094732939a7bc88d79c41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  knockbackForce: 25
+  upwardBias: 0.5
+  freezeDuration: 0.4
 --- !u!1 &6053081476958093426
 GameObject:
   m_ObjectHideFlags: 0
