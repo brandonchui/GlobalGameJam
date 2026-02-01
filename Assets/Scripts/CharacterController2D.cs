@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
 public class CharacterController2D : MonoBehaviour {
+    public GameObject hairParticles;
     public GameObject hitParticlesPrefab;
     public Rigidbody2D rigid { get; private set; }
     Collider2D col;
@@ -49,6 +50,7 @@ public class CharacterController2D : MonoBehaviour {
 
     SpriteRenderer sr;
     public Sprite idleSprite;
+    public Sprite liftSprite;
     public Sprite jumpSprite;
     public Sprite[] runSprites;
 
@@ -233,7 +235,10 @@ public class CharacterController2D : MonoBehaviour {
 
         switch (animState) {
             case AnimState.IDLE:
-                sr.sprite = idleSprite;
+                sr.sprite = tryToLift ? liftSprite : idleSprite;
+                Vector3 p = hairParticles.transform.localPosition;
+                p.y = tryToLift ? -0.15f : 0.0f;
+                hairParticles.transform.localPosition = p;
                 break;
             case AnimState.JUMP:
                 sr.sprite = jumpSprite;

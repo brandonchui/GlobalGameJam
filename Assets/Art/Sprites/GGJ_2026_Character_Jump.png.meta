@@ -116,12 +116,12 @@ TextureImporter:
       name: GGJ_2026_Character_Jump_0
       rect:
         serializedVersion: 2
-        x: 9
+        x: 0
         y: 0
-        width: 96
+        width: 105
         height: 124
-      alignment: 0
-      pivot: {x: 0, y: 0}
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -138,7 +138,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: f159447e8cf6ee44fa43b7f5ff3658cf
     internalID: 0
     vertices: []
     indices: 

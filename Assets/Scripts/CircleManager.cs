@@ -1,9 +1,6 @@
 using System.Collections.Generic;
-using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
-using static UnityEditor.Experimental.GraphView.GraphView;
 
 public class CircleManager : MonoBehaviour {
     public List<DebugCircle> circles;
