@@ -83,7 +83,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 21300000, guid: e2f114859801ea54abdd456a2276b77b, type: 3}
+  m_Sprite: {fileID: -5015455434238351694, guid: e2f114859801ea54abdd456a2276b77b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -152,6 +152,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RandomSprite
   sprites:
-  - {fileID: 21300000, guid: e2f114859801ea54abdd456a2276b77b, type: 3}
-  - {fileID: 21300000, guid: 6ee12f3cb1777064cbe9c2fa0330931d, type: 3}
-  - {fileID: 21300000, guid: 6610ff897cd916a4d9a4bf6fb1944ac5, type: 3}
+  - {fileID: -5015455434238351694, guid: e2f114859801ea54abdd456a2276b77b, type: 3}
+  - {fileID: 7182464641667103271, guid: 6ee12f3cb1777064cbe9c2fa0330931d, type: 3}
+  - {fileID: 8432333925617263202, guid: 6610ff897cd916a4d9a4bf6fb1944ac5, type: 3}
