@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour {
         }
     }
     void Update() {
-        sr.transform.localScale = new Vector3(1.0f, 1.0f + 0.2f * Mathf.Sin(Time.time * bounceSpeed), 0.0f);
-        sr.transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Sin(Time.time * wobbleSpeed) * 10f);
+        sr.transform.localScale = new Vector3(1.0f, 1.0f + 0.25f * Mathf.Sin(Time.time * bounceSpeed), 0.0f);
+        sr.transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Sin(Time.time * wobbleSpeed) * 8f);
     }
 }

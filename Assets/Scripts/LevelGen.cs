@@ -55,9 +55,24 @@ public class LevelGen : MonoBehaviour {
                 Vector2 size;
 
                 float normalChance = 0.8f - y * 0.01f; // lasts ones at about 300m at this reduction
-                prefab = Random.value < normalChance ? normalPrefab : (Random.value < 0.5f ? greenPrefab : redPrefab);
-                bool widerOrTall = Random.value < 0.55f;
-                size = new Vector2(widerOrTall ? Random.Range(2.0f, scale) : 1, !widerOrTall ? Random.Range(2.0f, scale) : 1);
+                float jumpThroughChance = Mathf.Max(0.3f - y * 0.01f,0.1f);
+                prefab = normalPrefab;
+                bool wider = Random.value < 0.55f;
+                if (Random.value < normalChance) {
+                    if (Random.value < jumpThroughChance) {
+                        prefab = jumpThroughPrefab;
+                        wider = true;
+                    }
+                }
+                else {
+                    prefab = Random.value < 0.5f ? greenPrefab : redPrefab;
+                }
+
+                //prefab = Random.value < normalChance ? normalPrefab : (Random.value < 0.5f ? greenPrefab : redPrefab);
+                size = new Vector2(wider ? Random.Range(2.0f, scale) : 1, !wider ? Random.Range(2.0f, scale) : 1);
+                if (prefab == jumpThroughPrefab) {
+                    size.y = 0.5f;
+                }
 
                 GameObject go = Instantiate(prefab, transform);
                 go.transform.position = new Vector3(x - width / 2.0f + Random.value, y + Random.value, 0) * scale;
@@ -65,7 +80,7 @@ public class LevelGen : MonoBehaviour {
                 spawnedObjects.Add(go);
 
                 float itemSpawnChance = Mathf.Min(0.15f + y * 0.01f, 0.4f);
-                float starSpawnChance = Mathf.Min(0.1f + y * 0.005f, 0.2f);
+                float starSpawnChance = Mathf.Min(0.15f + y * 0.005f, 0.25f);
                 if (Random.value < itemSpawnChance) {
                     Vector3 pos = go.transform.position + Vector3.up * (size.y / 2f + 0.5f);
                     var itemPrefab = Random.value < starSpawnChance ? starPowerupPrefab : bombPrefab;
