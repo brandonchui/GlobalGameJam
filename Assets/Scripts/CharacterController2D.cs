@@ -1,12 +1,13 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
 public class CharacterController2D : MonoBehaviour {
     public GameObject hitParticlesPrefab;
-    public Rigidbody2D rigid { get;  private set; }
+    public Rigidbody2D rigid { get; private set; }
     Collider2D col;
     private PlayerInput playerInput;
     private Vector2 moveInput;
@@ -36,9 +37,7 @@ public class CharacterController2D : MonoBehaviour {
     private bool jumpHeld = false;
 
     // Lift up state
-    private float originalGravityScale;
-    private CharacterController2D currentlyLifting;
-    private bool isBeingLifted = false;
+    bool tryToLift = false;
 
     Vector2 myLook;
     Vector2 lookDirection;
@@ -71,7 +70,6 @@ public class CharacterController2D : MonoBehaviour {
         col = GetComponent<Collider2D>();
         playerInput = GetComponent<PlayerInput>();
         sr = GetComponentInChildren<SpriteRenderer>();
-        originalGravityScale = rigid.gravityScale;
     }
 
     private void OnEnable() {
@@ -98,17 +96,11 @@ public class CharacterController2D : MonoBehaviour {
     }
 
     private void OnAttackPerformed(InputAction.CallbackContext context) {
-        // Lift co-op mechanic on Attack hold
-        if (GameManager.IsCoop && controlsActive) {
-            TryLiftPartner();
-        }
+        tryToLift = true;
     }
 
     private void OnAttackCanceled(InputAction.CallbackContext context) {
-        // Release lift - restore partner's gravity
-        if (GameManager.IsCoop) {
-            ReleaseLiftPartner();
-        }
+        tryToLift = false;
     }
 
     private void OnLookPerformed(InputAction.CallbackContext context) {
@@ -186,7 +178,8 @@ public class CharacterController2D : MonoBehaviour {
         // Coyote time
         if (grounded) {
             coyoteTimer = coyoteTime;
-        } else {
+        }
+        else {
             coyoteTimer -= Time.deltaTime;
         }
 
@@ -212,13 +205,14 @@ public class CharacterController2D : MonoBehaviour {
         if (rigid.linearVelocity.y < 0) {
             // Falling - apply fall multiplier
             //rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        } else if (rigid.linearVelocity.y > 0 && !jumpHeld && controlsActive) {
+        }
+        else if (rigid.linearVelocity.y > 0 && !jumpHeld && controlsActive) {
             // Rising but jump released - cut jump short (skip during knockback)
             rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
         if (grounded) {
             if (moveInput.sqrMagnitude > 0.01) {
-                if(animState != AnimState.RUN) {
+                if (animState != AnimState.RUN) {
                     runTimer = 0.0f;
                 }
                 else {
@@ -257,66 +251,42 @@ public class CharacterController2D : MonoBehaviour {
         grounded = false;
         for (int i = 0; i < hits.Length; i++) {
             var hit = hits[i];
-            if(hit.collider != col && hit.normal.y > 0.5f) {
+            if (hit.collider != col && hit.normal.y > 0.5f) {
                 grounded = true;
                 break;
             }
         }
-        //grounded = hits.Length > 0;
-        //timeSinceGrounded = hits.Length > 0 ? 0.0f : timeSinceGrounded + Time.deltaTime;
 
-        // Auto-release lift when partner reaches or passes our height
-        if (currentlyLifting != null && currentlyLifting.transform.position.y >= transform.position.y) {
-            ReleaseLiftPartner();
-        }
-    }
+        if (GameManager.IsCoop) {
+            // find lower player
+            var p1 = GameManager.Instance.player1;
+            var p2 = GameManager.Instance.player2;
 
-    private void TryLiftPartner() {
-        // Already lifting someone
-        if (currentlyLifting != null) return;
-
-        var partner = FindLowerPartner();
-        if (partner != null && !partner.isBeingLifted) {
-            currentlyLifting = partner;
-            partner.ReceiveLiftBoost(liftGravityScale);
-        }
-    }
-
-    private void ReleaseLiftPartner() {
-        if (currentlyLifting != null) {
-            currentlyLifting.ReleaseLiftBoost();
-            currentlyLifting = null;
-        }
-    }
-
-    private CharacterController2D FindLowerPartner() {
-        var players = FindObjectsByType<CharacterController2D>(FindObjectsSortMode.None);
-        foreach (var player in players) {
-            if (player == this) continue;
-            if (!player.gameObject.activeInHierarchy) continue;
-
-            // Only boost if partner is lower
-            if (player.transform.position.y < transform.position.y) {
-                return player;
+            var lower = p1.transform.position.y < p2.transform.position.y ? p1 : p2;
+            var higher = p1.transform.position.y < p2.transform.position.y ? p2 : p1;
+            if (lower == this) { // cant lift if youre the lower guy
+                higher.SetLiftState(false);
+            }
+            else {
+                lower.SetLiftState(tryToLift && grounded);
             }
         }
-        return null;
+
     }
 
-    public void ReceiveLiftBoost(float gravityScale) {
-        isBeingLifted = true;
-        rigid.gravityScale = gravityScale;
-        if (liftParticles != null) liftParticles.Play();
-    }
-
-    public void ReleaseLiftBoost() {
-        isBeingLifted = false;
-        rigid.gravityScale = originalGravityScale;
-        if (liftParticles != null) liftParticles.Stop();
+    public void SetLiftState(bool lifted) {
+        rigid.gravityScale = lifted ? 0.5f : 1.0f;
+        if (liftParticles) {
+            if (lifted && !liftParticles.isPlaying) {
+                liftParticles.Play();
+            }
+            var em = liftParticles.emission;
+            em.enabled = lifted;
+        }
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
-        if(collision.gameObject.CompareTag("Platform")) {
+        if (collision.gameObject.CompareTag("Platform")) {
             var contact = collision.GetContact(0);
             Instantiate(hitParticlesPrefab, contact.point, Quaternion.FromToRotation(Vector3.up, contact.normal));
         }
