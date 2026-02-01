@@ -14,7 +14,24 @@ public class CharacterController2D : MonoBehaviour {
 
     [Header("Movement Settings")]
     public float moveSpeed = 5f;
+    public float acceleration = 50f;
+    public float deceleration = 50f;
+    public float airControlMultiplier = 0.8f;
+
+    [Header("Jump Settings")]
     public float jumpPower = 10.0f;
+    public float coyoteTime = 0.1f;
+    public float jumpBufferTime = 0.1f;
+    public float variableJumpMultiplier = 0.5f;
+    public float fallMultiplier = 2.5f;
+    public float lowJumpMultiplier = 2f;
+
+    // Jump state
+    private float coyoteTimer = 0f;
+    private float jumpBufferTimer = 0f;
+    private bool isJumping = false;
+    private bool jumpHeld = false;
+
     Vector2 myLook;
     Vector2 lookDirection;
 
@@ -52,6 +69,7 @@ public class CharacterController2D : MonoBehaviour {
         playerInput.actions["Move"].performed += OnMovePerformed;
         playerInput.actions["Move"].canceled += OnMoveCanceled;
         playerInput.actions["Jump"].performed += OnJumpPerformed;
+        playerInput.actions["Jump"].canceled += OnJumpCanceled;
         playerInput.actions["Look"].performed += OnLookPerformed;
         playerInput.actions["Look"].canceled += OnLookCanceled;
     }
@@ -60,6 +78,7 @@ public class CharacterController2D : MonoBehaviour {
         playerInput.actions["Move"].performed -= OnMovePerformed;
         playerInput.actions["Move"].canceled -= OnMoveCanceled;
         playerInput.actions["Jump"].performed -= OnJumpPerformed;
+        playerInput.actions["Jump"].canceled -= OnJumpCanceled;
         playerInput.actions["Look"].performed -= OnLookPerformed;
         playerInput.actions["Look"].canceled -= OnLookCanceled;
     }
@@ -73,11 +92,22 @@ public class CharacterController2D : MonoBehaviour {
     }
 
     private void OnJumpPerformed(InputAction.CallbackContext context) {
-        if (grounded && controlsActive) {
+        jumpHeld = true;
+        jumpBufferTimer = jumpBufferTime;
+    }
+
+    private void OnJumpCanceled(InputAction.CallbackContext context) {
+        jumpHeld = false;
+    }
+
+    private void TryJump() {
+        if (controlsActive && (grounded || coyoteTimer > 0f)) {
             Vector3 v = rigid.linearVelocity;
             v.y = jumpPower;
             rigid.linearVelocity = v;
-            grounded = false;
+            isJumping = true;
+            coyoteTimer = 0f;
+            jumpBufferTimer = 0f;
         }
     }
 
@@ -124,10 +154,39 @@ public class CharacterController2D : MonoBehaviour {
             activeCircle.SetPosition(new Vector3(myLook.x, myLook.y, activeCircle.transform.position.z));
         }
 
+        // Coyote time
+        if (grounded) {
+            coyoteTimer = coyoteTime;
+            isJumping = false;
+        } else {
+            coyoteTimer -= Time.deltaTime;
+        }
+
+        // Jump buffer
+        if (jumpBufferTimer > 0f) {
+            jumpBufferTimer -= Time.deltaTime;
+            TryJump();
+        }
+
+        // Horizontal movement with acceleration
         if (controlsActive) {
-            Vector3 v = rigid.linearVelocity;
-            v.x = moveInput.x * moveSpeed;
-            rigid.linearVelocity = v;
+            float targetSpeed = moveInput.x * moveSpeed;
+            float currentSpeed = rigid.linearVelocity.x;
+            float accelRate = grounded ?
+                (Mathf.Abs(targetSpeed) > 0.01f ? acceleration : deceleration) :
+                (Mathf.Abs(targetSpeed) > 0.01f ? acceleration * airControlMultiplier : deceleration * airControlMultiplier);
+
+            float newSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, accelRate * Time.deltaTime);
+            rigid.linearVelocity = new Vector2(newSpeed, rigid.linearVelocity.y);
+        }
+
+        // Variable jump height & fall multiplier
+        if (rigid.linearVelocity.y < 0) {
+            // Falling - apply fall multiplier
+            rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+        } else if (rigid.linearVelocity.y > 0 && !jumpHeld) {
+            // Rising but jump released - cut jump short
+            rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
         if (grounded) {
             if (moveInput.sqrMagnitude > 0.01) {
