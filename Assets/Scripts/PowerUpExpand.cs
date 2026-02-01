@@ -7,15 +7,12 @@ public class PowerUpExpand : MonoBehaviour {
 
     private void OnTriggerEnter2D(Collider2D other) {
         if (other.CompareTag("Player")) {
-            var controller = other.GetComponent<CharacterController2D>();
-            if (controller != null) {
-                // Apply to main circle
-                if (controller.myCircle != null) {
-                    controller.myCircle.ApplyExpandPowerUp(expandAmount, duration);
-                }
-                // In single player, also apply to second circle
-                if (controller.singlePlayerMode && controller.secondCircle != null) {
-                    controller.secondCircle.ApplyExpandPowerUp(expandAmount, duration);
+            // Apply to all circles via CircleManager for consistency
+            if (CircleManager.instance != null) {
+                foreach (var circle in CircleManager.instance.circles) {
+                    if (circle != null) {
+                        circle.ApplyExpandPowerUp(expandAmount, duration);
+                    }
                 }
             }
             Destroy(gameObject);

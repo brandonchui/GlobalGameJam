@@ -58,8 +58,13 @@ public class DebugCircle : MonoBehaviour
         if (powerUpTimer > 0f)
         {
             powerUpTimer -= Time.deltaTime;
-            float t = powerUpTimer / powerUpDuration;
+            float t = Mathf.Clamp01(powerUpTimer / powerUpDuration);
             radius = Mathf.Lerp(baseRadius, expandedRadius, t);
+        }
+        else
+        {
+            // Ensure radius is reset to base when no power-up is active
+            radius = baseRadius;
         }
 
         // Update circle if radius changes in inspector
