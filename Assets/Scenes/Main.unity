@@ -647,8 +647,6 @@ MonoBehaviour:
   scale: 4.5
   batchSize: 10
   generateAheadDistance: 50
-  cleanupOldPlatforms: 1
-  cleanupDistance: 30
 --- !u!114 &1492947374
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -16,10 +16,6 @@ public class LevelGen : MonoBehaviour {
     public int batchSize = 10; // Rows to generate per batch
     public float generateAheadDistance = 50f; // How far ahead to generate
 
-    [Header("Cleanup")]
-    public bool cleanupOldPlatforms = true;
-    public float cleanupDistance = 30f; // Destroy platforms this far below camera
-
     private int generatedUpToRow = 0;
     private GameObject leftWall;
     private GameObject rightWall;
@@ -47,10 +43,6 @@ public class LevelGen : MonoBehaviour {
             UpdateWalls();
         }
 
-        // Cleanup old platforms
-        if (cleanupOldPlatforms) {
-            CleanupBelow(cameraY - cleanupDistance);
-        }
     }
 
     void GenerateBatch(int rows) {
@@ -90,7 +82,7 @@ public class LevelGen : MonoBehaviour {
         SetSize(rightWall, new Vector2(1, wallHeight + 10));
     }
 
-    void CleanupBelow(float yThreshold) {
+    public void CleanupBelow(float yThreshold) {
         for (int i = spawnedObjects.Count - 1; i >= 0; i--) {
             if (spawnedObjects[i] == null) {
                 spawnedObjects.RemoveAt(i);
@@ -127,13 +119,5 @@ public class LevelGen : MonoBehaviour {
         Vector3 genRight = new Vector3(width * scale, generatedHeight, 0);
         Gizmos.DrawLine(genLeft, genRight);
 
-        // Red line = cleanup threshold (platforms below this get destroyed)
-        if (cleanupOldPlatforms && Camera.main != null) {
-            Gizmos.color = Color.red;
-            float cleanupY = Camera.main.transform.position.y - cleanupDistance;
-            Vector3 cleanLeft = new Vector3(-width * scale, cleanupY, 0);
-            Vector3 cleanRight = new Vector3(width * scale, cleanupY, 0);
-            Gizmos.DrawLine(cleanLeft, cleanRight);
-        }
     }
 }

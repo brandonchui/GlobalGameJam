@@ -172,7 +172,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 100, y: 100}
+  m_Size: {x: 300, y: 100}
   m_EdgeRadius: 0
 --- !u!198 &-5173394034545036497
 ParticleSystem:
