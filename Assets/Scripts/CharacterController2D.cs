@@ -27,8 +27,8 @@ public class CharacterController2D : MonoBehaviour {
     public float lowJumpMultiplier = 2f;
 
     [Header("Lift Up Co-op Settings")]
-    public float liftDetectionRadius = 1.5f;
-    public float liftForce = 15f;
+    public float liftGravityScale = 0.3f;
+    public float liftDuration = 0.5f;
     public float liftCooldown = 0.5f;
 
     // Jump state
@@ -40,6 +40,8 @@ public class CharacterController2D : MonoBehaviour {
     private const float LIFT_INPUT_THRESHOLD = -0.7f;
     private bool wasPressingDown = false;
     private float liftCooldownTimer = 0f;
+    private float liftGravityTimer = 0f;
+    private float originalGravityScale;
 
     Vector2 myLook;
     Vector2 lookDirection;
@@ -72,6 +74,7 @@ public class CharacterController2D : MonoBehaviour {
         col = GetComponent<Collider2D>();
         playerInput = GetComponent<PlayerInput>();
         sr = GetComponentInChildren<SpriteRenderer>();
+        originalGravityScale = rigid.gravityScale;
     }
 
     private void OnEnable() {
@@ -255,6 +258,14 @@ public class CharacterController2D : MonoBehaviour {
         if (liftCooldownTimer > 0f) {
             liftCooldownTimer -= Time.deltaTime;
         }
+
+        // Lift gravity effect timer
+        if (liftGravityTimer > 0f) {
+            liftGravityTimer -= Time.deltaTime;
+            if (liftGravityTimer <= 0f) {
+                rigid.gravityScale = originalGravityScale;
+            }
+        }
     }
 
     private void UpdateLiftMechanic() {
@@ -275,33 +286,30 @@ public class CharacterController2D : MonoBehaviour {
     }
 
     private void TryLiftPartner() {
-        var partner = FindNearbyPartner();
+        var partner = FindHigherPartner();
         if (partner != null) {
-            partner.ReceiveLiftBoost();
+            partner.ReceiveLiftBoost(liftGravityScale, liftDuration);
             liftCooldownTimer = liftCooldown;
         }
     }
 
-    private CharacterController2D FindNearbyPartner() {
+    private CharacterController2D FindHigherPartner() {
         var players = FindObjectsByType<CharacterController2D>(FindObjectsSortMode.None);
         foreach (var player in players) {
             if (player == this) continue;
             if (!player.gameObject.activeInHierarchy) continue;
 
-            float distance = Vector2.Distance(transform.position, player.transform.position);
-            if (distance <= liftDetectionRadius) {
+            // Only boost if partner is higher
+            if (player.transform.position.y > transform.position.y) {
                 return player;
             }
         }
         return null;
     }
 
-    public void ReceiveLiftBoost() {
-        // Reset vertical velocity for consistent boost
-        rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, 0f);
-
-        // Apply upward impulse
-        rigid.AddForce(Vector2.up * liftForce, ForceMode2D.Impulse);
+    public void ReceiveLiftBoost(float gravityScale, float duration) {
+        rigid.gravityScale = gravityScale;
+        liftGravityTimer = duration;
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -310,4 +318,31 @@ public class CharacterController2D : MonoBehaviour {
             Instantiate(hitParticlesPrefab, contact.point, Quaternion.FromToRotation(Vector3.up, contact.normal));
         }
     }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos() {
+        if (!Application.isPlaying) return;
+        if (!GameManager.IsCoop) return;
+
+        var players = FindObjectsByType<CharacterController2D>(FindObjectsSortMode.None);
+        if (players.Length < 2) return;
+
+        // Find highest player
+        CharacterController2D highest = null;
+        float highestY = float.MinValue;
+        foreach (var player in players) {
+            if (player.transform.position.y > highestY) {
+                highestY = player.transform.position.y;
+                highest = player;
+            }
+        }
+
+        // Draw circle above highest player
+        if (highest == this) {
+            Gizmos.color = Color.yellow;
+            Vector3 circlePos = transform.position + Vector3.up * 1.5f;
+            Gizmos.DrawWireSphere(circlePos, 0.3f);
+        }
+    }
+#endif
 }
