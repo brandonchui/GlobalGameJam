@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 9183105489222005689}
   - component: {fileID: 4055421917546904119}
   - component: {fileID: 2427781534410276933}
-  - component: {fileID: 7853410922734216182}
   m_Layer: 0
   m_Name: RedBox
   m_TagString: Untagged
@@ -83,8 +82,8 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: -5015455434238351694, guid: e2f114859801ea54abdd456a2276b77b, type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Sprite: {fileID: 603123271534448615, guid: 202bfee6ceb0e444dba2eaa7a37a7e87, type: 3}
+  m_Color: {r: 0.9685534, g: 0.29543912, b: 0.29543912, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -139,19 +138,3 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
---- !u!114 &7853410922734216182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3070264843781295276}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6b46bf5ac96241142984bf30d52339a0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RandomSprite
-  sprites:
-  - {fileID: -5015455434238351694, guid: e2f114859801ea54abdd456a2276b77b, type: 3}
-  - {fileID: 7182464641667103271, guid: 6ee12f3cb1777064cbe9c2fa0330931d, type: 3}
-  - {fileID: 8432333925617263202, guid: 6610ff897cd916a4d9a4bf6fb1944ac5, type: 3}
