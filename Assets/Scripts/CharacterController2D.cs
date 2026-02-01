@@ -268,7 +268,8 @@ public class CharacterController2D : MonoBehaviour {
                 higher.SetLiftState(false);
             }
             else {
-                lower.SetLiftState(tryToLift && grounded);
+                float posDiff = Mathf.Abs(p1.transform.position.y - p2.transform.position.y);
+                lower.SetLiftState(tryToLift && grounded && Mathf.Abs(moveInput.x) < 0.001f && posDiff > 0.1f);
             }
         }
 
@@ -286,9 +287,13 @@ public class CharacterController2D : MonoBehaviour {
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
-        if (collision.gameObject.CompareTag("Platform")) {
+        bool isPlatform = collision.gameObject.CompareTag("Platform");
+        bool isPlatformWood = collision.gameObject.CompareTag("PlatformWood");
+        if (isPlatform || isPlatformWood) {
             var contact = collision.GetContact(0);
-            Instantiate(hitParticlesPrefab, contact.point, Quaternion.FromToRotation(Vector3.up, contact.normal));
+            if (!isPlatformWood || contact.normal.y > -0.5f) {
+                Instantiate(hitParticlesPrefab, contact.point, Quaternion.FromToRotation(Vector3.up, contact.normal));
+            }
         }
     }
 

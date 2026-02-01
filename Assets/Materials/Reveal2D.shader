@@ -2,7 +2,7 @@ Shader "Custom/Reveal2D"
 {
     Properties
     {
-
+        _MainTex ("Texture", 2D) = "white" {}
         _CircleIndex ("Circle Index", Int) = 0
     }
     SubShader

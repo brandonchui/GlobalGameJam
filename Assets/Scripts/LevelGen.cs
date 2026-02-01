@@ -9,6 +9,7 @@ public class LevelGen : MonoBehaviour {
     public GameObject bombPrefab;
     public GameObject starPowerupPrefab;
     public GameObject jumpThroughPrefab;
+    public GameObject yellowPrefab;
 
     float width = 10;
     float scale = 4.5f;
@@ -55,7 +56,7 @@ public class LevelGen : MonoBehaviour {
                 Vector2 size;
 
                 float normalChance = 0.8f - y * 0.01f; // lasts ones at about 300m at this reduction
-                float jumpThroughChance = Mathf.Max(0.3f - y * 0.01f,0.1f);
+                float jumpThroughChance = Mathf.Max(0.3f - y * 0.01f, 0.1f);
                 prefab = normalPrefab;
                 bool wider = Random.value < 0.55f;
                 if (Random.value < normalChance) {
@@ -66,9 +67,12 @@ public class LevelGen : MonoBehaviour {
                 }
                 else {
                     prefab = Random.value < 0.5f ? greenPrefab : redPrefab;
+                    float yellowChance = -0.1f + y * 0.01f;
+                    if (Random.value < yellowChance) {
+                        prefab = yellowPrefab;
+                    }
                 }
 
-                //prefab = Random.value < normalChance ? normalPrefab : (Random.value < 0.5f ? greenPrefab : redPrefab);
                 size = new Vector2(wider ? Random.Range(2.0f, scale) : 1, !wider ? Random.Range(2.0f, scale) : 1);
                 if (prefab == jumpThroughPrefab) {
                     size.y = 0.5f;
@@ -79,7 +83,7 @@ public class LevelGen : MonoBehaviour {
                 SetSize(go, size);
                 spawnedObjects.Add(go);
 
-                float itemSpawnChance = Mathf.Min(0.15f + y * 0.01f, 0.4f);
+                float itemSpawnChance = Mathf.Min(0.15f + y * 0.005f, 0.4f);
                 float starSpawnChance = Mathf.Min(0.15f + y * 0.005f, 0.25f);
                 if (Random.value < itemSpawnChance) {
                     Vector3 pos = go.transform.position + Vector3.up * (size.y / 2f + 0.5f);
