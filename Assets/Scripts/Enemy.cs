@@ -6,6 +6,8 @@ public class Enemy : MonoBehaviour {
     public float upwardBias = 0.5f; // Extra upward push (0 = none, 1 = strong)
     public float freezeDuration = 0.4f;
 
+    public ParticleSystem boom;
+
     private void OnTriggerEnter2D(Collider2D collider) {
         if (collider.gameObject.CompareTag("Player")) {
             var player = collider.gameObject.GetComponent<CharacterController2D>();
@@ -23,6 +25,10 @@ public class Enemy : MonoBehaviour {
                 // Apply force
                 player.rigid.AddForce(dir * knockbackForce, ForceMode2D.Impulse);
                 player.FreezeControls(freezeDuration);
+
+                boom.transform.parent = null;
+                boom.Play();
+                Destroy(boom, 5.0f);
             }
 
             Destroy(gameObject);

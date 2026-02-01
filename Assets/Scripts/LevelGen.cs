@@ -54,7 +54,7 @@ public class LevelGen : MonoBehaviour {
                 GameObject prefab;
                 Vector2 size;
 
-                float normalChance = 0.7f - y * 0.01f; // lasts ones at about 300m at this reduction
+                float normalChance = 0.8f - y * 0.01f; // lasts ones at about 300m at this reduction
                 prefab = Random.value < normalChance ? normalPrefab : (Random.value < 0.5f ? greenPrefab : redPrefab);
                 bool widerOrTall = Random.value < 0.55f;
                 size = new Vector2(widerOrTall ? Random.Range(2.0f, scale) : 1, !widerOrTall ? Random.Range(2.0f, scale) : 1);
