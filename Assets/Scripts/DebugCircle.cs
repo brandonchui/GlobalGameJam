@@ -8,8 +8,16 @@ public class DebugCircle : MonoBehaviour
     public Color color = Color.green;
     private LineRenderer lineRenderer;
 
+    // Power up state
+    private float baseRadius;
+    private float powerUpTimer = 0f;
+    private float powerUpDuration = 0f;
+    private float expandedRadius = 0f;
+
     void Start()
     {
+        baseRadius = radius;
+
         // Create LineRenderer for visual
         lineRenderer = gameObject.AddComponent<LineRenderer>();
         lineRenderer.positionCount = segments + 1;
@@ -33,13 +41,21 @@ public class DebugCircle : MonoBehaviour
         {
             float x = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
             float y = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
-            lineRenderer.SetPosition(i, new Vector3(x, y, transform.position.z));
+            lineRenderer.SetPosition(i, new Vector3(x, y, 0));
             angle += 360f / segments;
         }
     }
 
     void Update()
     {
+        // Handle power up shrinking
+        if (powerUpTimer > 0f)
+        {
+            powerUpTimer -= Time.deltaTime;
+            float t = powerUpTimer / powerUpDuration;
+            radius = Mathf.Lerp(baseRadius, expandedRadius, t);
+        }
+
         // Update circle if radius changes in inspector
         if (lineRenderer != null)
         {
@@ -47,14 +63,16 @@ public class DebugCircle : MonoBehaviour
         }
     }
 
+    public void ApplyExpandPowerUp(float expandAmount, float duration)
+    {
+        expandedRadius = baseRadius + expandAmount;
+        radius = expandedRadius;
+        powerUpDuration = duration;
+        powerUpTimer = duration;
+    }
+
     public void SetPosition(Vector3 pos) {
         transform.position = pos;
     }
 
-    // Visualize in Scene view too
-    void OnDrawGizmos()
-    {
-        Gizmos.color = color;
-        Gizmos.DrawWireSphere(transform.position, radius);
-    }
 }
