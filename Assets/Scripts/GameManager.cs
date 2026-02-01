@@ -6,7 +6,6 @@ public class GameManager : MonoBehaviour {
     public static bool IsCoop { get; private set; }
 
     [Header("Player Setup")]
-    public GameObject playerPrefab;
     public Transform player1Spawn;
     public Transform player2Spawn;
 
@@ -33,12 +32,10 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SetupPlayers() {
-        if (playerPrefab == null) {
-            // Find existing players in scene
-            var existingPlayers = GameObject.FindGameObjectsWithTag("Player");
-            if (existingPlayers.Length > 0) player1 = existingPlayers[0];
-            if (existingPlayers.Length > 1) player2 = existingPlayers[1];
-        }
+        // Find existing players in scene
+        var existingPlayers = GameObject.FindGameObjectsWithTag("Player");
+        if (existingPlayers.Length > 0) player1 = existingPlayers[0];
+        if (existingPlayers.Length > 1) player2 = existingPlayers[1];
 
         if (IsCoop) {
             SetupCoopMode();

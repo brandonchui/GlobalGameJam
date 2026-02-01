@@ -340,6 +340,7 @@ MonoBehaviour:
   players: []
   minZoom: 5
   maxZoom: 15
+  singlePlayerZoom: 10
   zoomPadding: 3
   smoothTime: 0.2
   minY: 0
@@ -564,6 +565,16 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 921695060}
   m_CullTransparentMesh: 1
+--- !u!4 &1217111747 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 662281299975824856, guid: 24a3d4b21e4a9ef4682004a6fee3e036, type: 3}
+  m_PrefabInstance: {fileID: 7511309008298896326}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1451268045 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6391418125054923966, guid: 81b8a6de1fb538143a310e395741dab2, type: 3}
+  m_PrefabInstance: {fileID: 7082233434071403400}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1492947370
 GameObject:
   m_ObjectHideFlags: 0
@@ -575,6 +586,7 @@ GameObject:
   - component: {fileID: 1492947372}
   - component: {fileID: 1492947371}
   - component: {fileID: 1492947373}
+  - component: {fileID: 1492947374}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -631,6 +643,28 @@ MonoBehaviour:
   ground: {fileID: 1570193664}
   enemyPrefab: {fileID: 2921915131566053004, guid: 204a3e3c869064bbdaee33cb383c1fb0, type: 3}
   enemySpawnChance: 0.1
+  width: 10
+  scale: 4.5
+  batchSize: 10
+  generateAheadDistance: 50
+  cleanupOldPlatforms: 1
+  cleanupDistance: 30
+--- !u!114 &1492947374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1492947370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ab56610102e34d138be89e5ac1633e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameManager
+  player1Spawn: {fileID: 1451268045}
+  player2Spawn: {fileID: 1217111747}
+  circle1: {fileID: 1715274705}
+  circle2: {fileID: 434983892}
 --- !u!1 &1498930793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,10 +1221,6 @@ PrefabInstance:
     - target: {fileID: 610604938303910377, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 3421597059720119439, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_IsTrigger
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6622307181481131818, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
       propertyPath: m_Name
