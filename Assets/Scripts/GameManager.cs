@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -13,8 +14,8 @@ public class GameManager : MonoBehaviour {
     public DebugCircle circle1;
     public DebugCircle circle2;
 
-    private GameObject player1;
-    private GameObject player2;
+    public CharacterController2D player1 { get; private set; }
+    public CharacterController2D player2 { get; private set; }
 
     private void Awake() {
         Instance = this;
@@ -36,8 +37,8 @@ public class GameManager : MonoBehaviour {
         var existingPlayers = GameObject.FindGameObjectsWithTag("Player");
         System.Array.Sort(existingPlayers, (a, b) => a.name.CompareTo(b.name));
 
-        if (existingPlayers.Length > 0) player1 = existingPlayers[0];
-        if (existingPlayers.Length > 1) player2 = existingPlayers[1];
+        if (existingPlayers.Length > 0) player1 = existingPlayers[0].GetComponent<CharacterController2D>();
+        if (existingPlayers.Length > 1) player2 = existingPlayers[1].GetComponent<CharacterController2D>();
 
         if (IsCoop) {
             SetupCoopMode();
@@ -77,7 +78,7 @@ public class GameManager : MonoBehaviour {
         }
 
         // Fallback to player1 if no keyboard player found
-        if (keyboardPlayer == null) keyboardPlayer = player1;
+        if (keyboardPlayer == null) keyboardPlayer = player1.gameObject;
 
         // Setup keyboard player with both circles
         if (keyboardPlayer != null) {

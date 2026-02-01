@@ -3,7 +3,6 @@ Shader "Custom/RevealOnOverlap"
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Color ("Tint Color", Color) = (1, 0, 1, 1) // Purple by default
     }
     SubShader
     {
@@ -73,8 +72,8 @@ Shader "Custom/RevealOnOverlap"
                     discard;
 
                 // Sample texture and apply color tint
-                fixed4 col = tex2D(_MainTex, i.uv);
-                return col * _Color * i.color;
+                fixed4 c = tex2D(_MainTex, i.uv) * i.color;
+                return fixed4(c.rgb * 3.0f, c.a);
             }
             ENDCG
         }
