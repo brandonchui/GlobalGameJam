@@ -9,6 +9,11 @@ public class LeaderboardManager : MonoBehaviour {
     public TextMeshProUGUI highScoresText;
     public TMP_InputField nameInputField;
 
+    public TextMeshProUGUI currentScoreText;
+
+    private float score;
+
+
     [Header("Settings")]
     public int maxEntries = 5;
 
@@ -56,7 +61,6 @@ public class LeaderboardManager : MonoBehaviour {
         if (string.IsNullOrWhiteSpace(playerName)) return;
 
         // TODO: Replace 0 with actual score from gameplay
-        float score = PlayerPrefs.GetFloat("PendingScore", 0f);
 
         AddScore(playerName, score);
         nameInputField.text = "";
@@ -84,6 +88,9 @@ public class LeaderboardManager : MonoBehaviour {
 
     private void LoadLeaderboard() {
         string json = PlayerPrefs.GetString(LEADERBOARD_KEY, "");
+        
+        score = PlayerPrefs.GetFloat("PendingScore", 0f);
+        currentScoreText.text = score.ToString();
 
         if (string.IsNullOrEmpty(json)) {
             leaderboardData = new LeaderboardData();
