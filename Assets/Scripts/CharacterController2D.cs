@@ -26,10 +26,20 @@ public class CharacterController2D : MonoBehaviour {
     public float fallMultiplier = 2.5f;
     public float lowJumpMultiplier = 2f;
 
+    [Header("Lift Up Co-op Settings")]
+    public float liftDetectionRadius = 1.5f;
+    public float liftForce = 15f;
+    public float liftCooldown = 0.5f;
+
     // Jump state
     private float coyoteTimer = 0f;
     private float jumpBufferTimer = 0f;
     private bool jumpHeld = false;
+
+    // Lift up state
+    private const float LIFT_INPUT_THRESHOLD = -0.7f;
+    private bool wasPressingDown = false;
+    private float liftCooldownTimer = 0f;
 
     Vector2 myLook;
     Vector2 lookDirection;
@@ -235,6 +245,63 @@ public class CharacterController2D : MonoBehaviour {
         }
         //grounded = hits.Length > 0;
         //timeSinceGrounded = hits.Length > 0 ? 0.0f : timeSinceGrounded + Time.deltaTime;
+
+        // Lift Up co-op mechanic
+        if (GameManager.IsCoop && controlsActive) {
+            UpdateLiftMechanic();
+        }
+
+        // Cooldown timer
+        if (liftCooldownTimer > 0f) {
+            liftCooldownTimer -= Time.deltaTime;
+        }
+    }
+
+    private void UpdateLiftMechanic() {
+        // Require grounded to lift
+        if (!grounded) {
+            wasPressingDown = moveInput.y < LIFT_INPUT_THRESHOLD;
+            return;
+        }
+
+        bool pressingDownNow = moveInput.y < LIFT_INPUT_THRESHOLD;
+
+        // Rising edge detection - only trigger on initial press
+        if (pressingDownNow && !wasPressingDown && liftCooldownTimer <= 0f) {
+            TryLiftPartner();
+        }
+
+        wasPressingDown = pressingDownNow;
+    }
+
+    private void TryLiftPartner() {
+        var partner = FindNearbyPartner();
+        if (partner != null) {
+            partner.ReceiveLiftBoost();
+            liftCooldownTimer = liftCooldown;
+        }
+    }
+
+    private CharacterController2D FindNearbyPartner() {
+        var players = FindObjectsByType<CharacterController2D>(FindObjectsSortMode.None);
+        foreach (var player in players) {
+            if (player == this) continue;
+            if (!player.gameObject.activeInHierarchy) continue;
+
+            float distance = Vector2.Distance(transform.position, player.transform.position);
+            if (distance <= liftDetectionRadius) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public void ReceiveLiftBoost() {
+        // Reset vertical velocity for consistent boost
+        rigid.linearVelocity = new Vector2(rigid.linearVelocity.x, 0f);
+
+        // Apply upward impulse
+        rigid.AddForce(Vector2.up * liftForce, ForceMode2D.Impulse);
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
