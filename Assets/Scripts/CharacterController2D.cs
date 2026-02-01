@@ -29,7 +29,6 @@ public class CharacterController2D : MonoBehaviour {
     // Jump state
     private float coyoteTimer = 0f;
     private float jumpBufferTimer = 0f;
-    private bool isJumping = false;
     private bool jumpHeld = false;
 
     Vector2 myLook;
@@ -105,7 +104,6 @@ public class CharacterController2D : MonoBehaviour {
             Vector3 v = rigid.linearVelocity;
             v.y = jumpPower;
             rigid.linearVelocity = v;
-            isJumping = true;
             coyoteTimer = 0f;
             jumpBufferTimer = 0f;
         }
@@ -157,7 +155,6 @@ public class CharacterController2D : MonoBehaviour {
         // Coyote time
         if (grounded) {
             coyoteTimer = coyoteTime;
-            isJumping = false;
         } else {
             coyoteTimer -= Time.deltaTime;
         }
@@ -183,7 +180,7 @@ public class CharacterController2D : MonoBehaviour {
         // Variable jump height & fall multiplier
         if (rigid.linearVelocity.y < 0) {
             // Falling - apply fall multiplier
-            rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
+            //rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
         } else if (rigid.linearVelocity.y > 0 && !jumpHeld) {
             // Rising but jump released - cut jump short
             rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
@@ -229,7 +226,7 @@ public class CharacterController2D : MonoBehaviour {
         grounded = false;
         for (int i = 0; i < hits.Length; i++) {
             var hit = hits[i];
-            if(hit.collider != col) {
+            if(hit.collider != col && hit.normal.y > 0.5f) {
                 grounded = true;
                 break;
             }

@@ -39,6 +39,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 1014823197
+    locked: 0
   - name: SpriteParticles
     uniqueID: 3326648859
     locked: 0

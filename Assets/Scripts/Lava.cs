@@ -19,7 +19,7 @@ public class Lava : MonoBehaviour {
     // Update is called once per frame
     void Update() {
         transform.Translate(new Vector3(0, riseSpeed * Time.deltaTime, 0));
-        riseSpeed += Time.deltaTime * 0.0025f;
+        riseSpeed += Time.deltaTime * 0.0035f;
         // Debug.Log(riseSpeed);
     }
 
