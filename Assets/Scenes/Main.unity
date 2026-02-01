@@ -690,13 +690,9 @@ MonoBehaviour:
   redPrefab: {fileID: 3070264843781295276, guid: 93fc28d7f66135048a6d8181800a19e3, type: 3}
   normalPrefab: {fileID: 3070264843781295276, guid: e5a486e623d5ee64e856a64e2b302e2c, type: 3}
   ground: {fileID: 1570193664}
-  enemyPrefab: {fileID: 2921915131566053004, guid: 204a3e3c869064bbdaee33cb383c1fb0, type: 3}
-  enemySpawnChance: 0.1
-  width: 10
-  scale: 4.5
-  batchSize: 10
-  initialBatchSize: 5
-  generateAheadDistance: 50
+  bombPrefab: {fileID: 2921915131566053004, guid: 204a3e3c869064bbdaee33cb383c1fb0, type: 3}
+  starPowerupPrefab: {fileID: 4041100603505166447, guid: 21a4931a6e25a4467bc41dcd6030bec2, type: 3}
+  jumpThroughPrefab: {fileID: 3070264843781295276, guid: b3aafc2c95207dc43ad03c9da5db35e9, type: 3}
 --- !u!114 &1492947374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1108,6 +1104,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2585870679842935190, guid: ecdcd533f98c54ccaa8bec58cef74c7b, type: 3}
+      propertyPath: m_SortingOrder
+      value: -37
+      objectReference: {fileID: 0}
     - target: {fileID: 6565388831898412786, guid: ecdcd533f98c54ccaa8bec58cef74c7b, type: 3}
       propertyPath: m_Name
       value: Background
@@ -1330,42 +1330,6 @@ PrefabInstance:
     - target: {fileID: 6622307181481131818, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
       propertyPath: m_Name
       value: Lava
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149589529236094608, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149589529236094608, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_LightVolumeEnabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149589529236094608, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_LightVolumeIntensity
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149589529236094608, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_ShapeLightFalloffSize
-      value: 0.1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149589529236094608, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_LocalBounds.m_Center.x
-      value: -0.00025001168
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149589529236094608, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_LocalBounds.m_Center.y
-      value: -0.000100016594
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149589529236094608, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_LocalBounds.m_Extent.x
-      value: 0.60045004
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149589529236094608, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_LocalBounds.m_Extent.y
-      value: 0.6009
-      objectReference: {fileID: 0}
-    - target: {fileID: 8149589529236094608, guid: a6ed1fc7f4f657140bb7faa05eb38542, type: 3}
-      propertyPath: m_ShadowVolumeIntensityEnabled
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
