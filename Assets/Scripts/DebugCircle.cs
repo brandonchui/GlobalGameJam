@@ -8,6 +8,11 @@ public class DebugCircle : MonoBehaviour
     public Color color = Color.green;
     private LineRenderer lineRenderer;
 
+    [Header("Screen Clamping")]
+    public bool clampToScreen = true;
+    public float screenPadding = 0.5f;
+    private Camera mainCamera;
+
     // Power up state
     private float baseRadius;
     private float powerUpTimer = 0f;
@@ -17,6 +22,7 @@ public class DebugCircle : MonoBehaviour
     void Start()
     {
         baseRadius = radius;
+        mainCamera = Camera.main;
 
         // Create LineRenderer for visual
         lineRenderer = gameObject.AddComponent<LineRenderer>();
@@ -61,6 +67,32 @@ public class DebugCircle : MonoBehaviour
         {
             DrawCircle();
         }
+    }
+
+    void LateUpdate()
+    {
+        // Clamp circle position to stay within camera view
+        if (clampToScreen && mainCamera != null)
+        {
+            ClampToScreen();
+        }
+    }
+
+    void ClampToScreen()
+    {
+        float camHeight = mainCamera.orthographicSize;
+        float camWidth = camHeight * mainCamera.aspect;
+        Vector3 camPos = mainCamera.transform.position;
+
+        Vector3 pos = transform.position;
+        float minX = camPos.x - camWidth + screenPadding;
+        float maxX = camPos.x + camWidth - screenPadding;
+        float minY = camPos.y - camHeight + screenPadding;
+        float maxY = camPos.y + camHeight - screenPadding;
+
+        pos.x = Mathf.Clamp(pos.x, minX, maxX);
+        pos.y = Mathf.Clamp(pos.y, minY, maxY);
+        transform.position = pos;
     }
 
     public void ApplyExpandPowerUp(float expandAmount, float duration)

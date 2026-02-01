@@ -147,6 +147,8 @@ public class CharacterController2D : MonoBehaviour {
                 myLook = Camera.main.ScreenToWorldPoint(mouse.position.ReadValue());
             }
             else {
+                // Sync myLook with actual circle position (in case it was clamped)
+                myLook = new Vector2(activeCircle.transform.position.x, activeCircle.transform.position.y);
                 myLook += lookDirection * 0.075f;
             }
             activeCircle.SetPosition(new Vector3(myLook.x, myLook.y, activeCircle.transform.position.z));
