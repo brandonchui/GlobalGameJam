@@ -177,12 +177,12 @@ public class CharacterController2D : MonoBehaviour {
             rigid.linearVelocity = new Vector2(newSpeed, rigid.linearVelocity.y);
         }
 
-        // Variable jump height & fall multiplier
+        // Variable jump height & fall multiplier (only when not in knockback)
         if (rigid.linearVelocity.y < 0) {
             // Falling - apply fall multiplier
             //rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        } else if (rigid.linearVelocity.y > 0 && !jumpHeld) {
-            // Rising but jump released - cut jump short
+        } else if (rigid.linearVelocity.y > 0 && !jumpHeld && controlsActive) {
+            // Rising but jump released - cut jump short (skip during knockback)
             rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
         if (grounded) {

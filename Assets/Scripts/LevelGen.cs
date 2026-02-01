@@ -10,7 +10,7 @@ public class LevelGen : MonoBehaviour {
 
     [Header("Generation Settings")]
     [Range(0f, 1f)]
-    public float enemySpawnChance = 0.1f;
+    public float enemySpawnChance = 0.4f;
     public float width = 10;
     public float scale = 4.5f;
     public int batchSize = 10; // Rows to generate per batch
@@ -72,8 +72,9 @@ public class LevelGen : MonoBehaviour {
                 SetSize(go, size);
                 spawnedObjects.Add(go);
 
-                // Spawn enemy on platform (not on easy batch)
-                if (!easy && enemyPrefab != null && Random.value < enemySpawnChance) {
+                // Spawn enemy on platform (lower chance in easy batch)
+                float spawnChance = easy ? enemySpawnChance * 0.5f : enemySpawnChance;
+                if (enemyPrefab != null && Random.value < spawnChance) {
                     Vector3 enemyPos = go.transform.position + Vector3.up * (size.y / 2f + 0.5f);
                     var enemy = Instantiate(enemyPrefab, enemyPos, Quaternion.identity, transform);
                     spawnedObjects.Add(enemy);
