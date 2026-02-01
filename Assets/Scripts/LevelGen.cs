@@ -14,16 +14,18 @@ public class LevelGen : MonoBehaviour {
     public float width = 10;
     public float scale = 4.5f;
     public int batchSize = 10; // Rows to generate per batch
-    public float generateAheadDistance = 50f; // How far ahead to generate
+    public int initialBatchSize = 5; // Shorter first batch
+    public float generateAheadDistance = 20f; // How far ahead to generate
 
     private int generatedUpToRow = 0;
+    private int batchNumber = 0;
     private GameObject leftWall;
     private GameObject rightWall;
     private List<GameObject> spawnedObjects = new List<GameObject>();
 
     void Start() {
-        // Generate initial batch
-        GenerateBatch(batchSize);
+        // Generate easy initial batch (shorter)
+        GenerateBatch(initialBatchSize, easy: true);
 
         // Create initial walls
         leftWall = Instantiate(normalPrefab, transform);
@@ -39,28 +41,39 @@ public class LevelGen : MonoBehaviour {
 
         // Generate more if camera is approaching the top
         if (cameraY + generateAheadDistance > generatedHeight) {
-            GenerateBatch(batchSize);
+            GenerateBatch(batchSize, easy: false);
             UpdateWalls();
         }
 
     }
 
-    void GenerateBatch(int rows) {
+    void GenerateBatch(int rows, bool easy) {
         int startRow = generatedUpToRow;
         int endRow = startRow + rows;
 
         for (int y = startRow; y < endRow; y++) {
             for (int x = 0; x < (int)width; ++x) {
-                var prefab = Random.value < 0.2f ? normalPrefab : Random.value < 0.5f ? greenPrefab : redPrefab;
+                GameObject prefab;
+                Vector2 size;
+
+                if (easy) {
+                    // Easy batch: mostly normal, some revealed, all horizontal (wide)
+                    prefab = Random.value < 0.7f ? normalPrefab : (Random.value < 0.5f ? greenPrefab : redPrefab);
+                    size = new Vector2(Random.Range(2.0f, scale), 1); // Always horizontal
+                } else {
+                    // Normal batch: mixed types, varied shapes
+                    prefab = Random.value < 0.2f ? normalPrefab : Random.value < 0.5f ? greenPrefab : redPrefab;
+                    bool widerOrTall = Random.value < 0.55f;
+                    size = new Vector2(widerOrTall ? Random.Range(2.0f, scale) : 1, !widerOrTall ? Random.Range(2.0f, scale) : 1);
+                }
+
                 GameObject go = Instantiate(prefab, transform);
                 go.transform.position = new Vector3(x - width / 2.0f + Random.value, y + Random.value, 0) * scale;
-                bool widerOrTall = Random.value < 0.55f;
-                Vector2 size = new Vector2(widerOrTall ? Random.Range(2.0f, scale) : 1, !widerOrTall ? Random.Range(2.0f, scale) : 1);
                 SetSize(go, size);
                 spawnedObjects.Add(go);
 
-                // Spawn enemy on platform
-                if (enemyPrefab != null && Random.value < enemySpawnChance) {
+                // Spawn enemy on platform (not on easy batch)
+                if (!easy && enemyPrefab != null && Random.value < enemySpawnChance) {
                     Vector3 enemyPos = go.transform.position + Vector3.up * (size.y / 2f + 0.5f);
                     var enemy = Instantiate(enemyPrefab, enemyPos, Quaternion.identity, transform);
                     spawnedObjects.Add(enemy);
@@ -68,6 +81,7 @@ public class LevelGen : MonoBehaviour {
             }
         }
 
+        batchNumber++;
         generatedUpToRow = endRow;
     }
 
