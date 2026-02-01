@@ -28,7 +28,7 @@ public class CharacterController2D : MonoBehaviour {
 
     [Header("Lift Up Co-op Settings")]
     public float liftGravityScale = -2f;  // Negative = float UP
-    public float liftScaleMultiplier = 1.5f;
+    public ParticleSystem liftParticles;
 
     // Jump state
     private float coyoteTimer = 0f;
@@ -37,7 +37,6 @@ public class CharacterController2D : MonoBehaviour {
 
     // Lift up state
     private float originalGravityScale;
-    private Vector3 originalScale;
     private CharacterController2D currentlyLifting;
     private bool isBeingLifted = false;
 
@@ -73,7 +72,6 @@ public class CharacterController2D : MonoBehaviour {
         playerInput = GetComponent<PlayerInput>();
         sr = GetComponentInChildren<SpriteRenderer>();
         originalGravityScale = rigid.gravityScale;
-        originalScale = transform.localScale;
     }
 
     private void OnEnable() {
@@ -272,10 +270,10 @@ public class CharacterController2D : MonoBehaviour {
         // Already lifting someone
         if (currentlyLifting != null) return;
 
-        var partner = FindHigherPartner();
+        var partner = FindLowerPartner();
         if (partner != null && !partner.isBeingLifted) {
             currentlyLifting = partner;
-            partner.ReceiveLiftBoost(liftGravityScale, liftScaleMultiplier);
+            partner.ReceiveLiftBoost(liftGravityScale);
         }
     }
 
@@ -286,32 +284,30 @@ public class CharacterController2D : MonoBehaviour {
         }
     }
 
-    private CharacterController2D FindHigherPartner() {
+    private CharacterController2D FindLowerPartner() {
         var players = FindObjectsByType<CharacterController2D>(FindObjectsSortMode.None);
         foreach (var player in players) {
             if (player == this) continue;
             if (!player.gameObject.activeInHierarchy) continue;
 
-            // Only boost if partner is higher
-            if (player.transform.position.y > transform.position.y) {
+            // Only boost if partner is lower
+            if (player.transform.position.y < transform.position.y) {
                 return player;
             }
         }
         return null;
     }
 
-    public void ReceiveLiftBoost(float gravityScale, float scaleMultiplier) {
+    public void ReceiveLiftBoost(float gravityScale) {
         isBeingLifted = true;
-        // Negative gravity = float up!
         rigid.gravityScale = gravityScale;
-        // ABSURD visual - scale up the player
-        transform.localScale = originalScale * scaleMultiplier;
+        if (liftParticles != null) liftParticles.Play();
     }
 
     public void ReleaseLiftBoost() {
         isBeingLifted = false;
         rigid.gravityScale = originalGravityScale;
-        transform.localScale = originalScale;
+        if (liftParticles != null) liftParticles.Stop();
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
@@ -329,18 +325,18 @@ public class CharacterController2D : MonoBehaviour {
         var players = FindObjectsByType<CharacterController2D>(FindObjectsSortMode.None);
         if (players.Length < 2) return;
 
-        // Find highest player
-        CharacterController2D highest = null;
-        float highestY = float.MinValue;
+        // Find lowest player (the one who can be boosted)
+        CharacterController2D lowest = null;
+        float lowestY = float.MaxValue;
         foreach (var player in players) {
-            if (player.transform.position.y > highestY) {
-                highestY = player.transform.position.y;
-                highest = player;
+            if (player.transform.position.y < lowestY) {
+                lowestY = player.transform.position.y;
+                lowest = player;
             }
         }
 
-        // Draw circle above highest player
-        if (highest == this) {
+        // Draw circle above lowest player (they can be boosted)
+        if (lowest == this) {
             Gizmos.color = Color.yellow;
             Vector3 circlePos = transform.position + Vector3.up * 1.5f;
             Gizmos.DrawWireSphere(circlePos, 0.3f);
