@@ -27,9 +27,10 @@ public class CharacterController2D : MonoBehaviour {
     public float lowJumpMultiplier = 2f;
 
     [Header("Lift Up Co-op Settings")]
-    public float liftGravityScale = 0.3f;
-    public float liftDuration = 0.5f;
-    public float liftCooldown = 0.5f;
+    public float liftGravityScale = -2f;  // Negative = float UP
+    public float liftDuration = 1.5f;
+    public float liftCooldown = 0.3f;
+    public float liftScaleMultiplier = 1.5f;
 
     // Jump state
     private float coyoteTimer = 0f;
@@ -37,11 +38,10 @@ public class CharacterController2D : MonoBehaviour {
     private bool jumpHeld = false;
 
     // Lift up state
-    private const float LIFT_INPUT_THRESHOLD = -0.7f;
-    private bool wasPressingDown = false;
     private float liftCooldownTimer = 0f;
     private float liftGravityTimer = 0f;
     private float originalGravityScale;
+    private Vector3 originalScale;
 
     Vector2 myLook;
     Vector2 lookDirection;
@@ -75,6 +75,7 @@ public class CharacterController2D : MonoBehaviour {
         playerInput = GetComponent<PlayerInput>();
         sr = GetComponentInChildren<SpriteRenderer>();
         originalGravityScale = rigid.gravityScale;
+        originalScale = transform.localScale;
     }
 
     private void OnEnable() {
@@ -101,10 +102,13 @@ public class CharacterController2D : MonoBehaviour {
     }
 
     private void OnAttackPerformed(InputAction.CallbackContext context) {
-        
+        // Lift co-op mechanic on Attack
+        if (GameManager.IsCoop && controlsActive && liftCooldownTimer <= 0f) {
+            TryLiftPartner();
+        }
     }
-    private void OnAttackCanceled(InputAction.CallbackContext context) {
 
+    private void OnAttackCanceled(InputAction.CallbackContext context) {
     }
 
     private void OnLookPerformed(InputAction.CallbackContext context) {
@@ -261,11 +265,6 @@ public class CharacterController2D : MonoBehaviour {
         //grounded = hits.Length > 0;
         //timeSinceGrounded = hits.Length > 0 ? 0.0f : timeSinceGrounded + Time.deltaTime;
 
-        // Lift Up co-op mechanic
-        if (GameManager.IsCoop && controlsActive) {
-            UpdateLiftMechanic();
-        }
-
         // Cooldown timer
         if (liftCooldownTimer > 0f) {
             liftCooldownTimer -= Time.deltaTime;
@@ -275,26 +274,11 @@ public class CharacterController2D : MonoBehaviour {
         if (liftGravityTimer > 0f) {
             liftGravityTimer -= Time.deltaTime;
             if (liftGravityTimer <= 0f) {
+                // Reset everything
                 rigid.gravityScale = originalGravityScale;
+                transform.localScale = originalScale;
             }
         }
-    }
-
-    private void UpdateLiftMechanic() {
-        // Require grounded to lift
-        if (!grounded) {
-            wasPressingDown = moveInput.y < LIFT_INPUT_THRESHOLD;
-            return;
-        }
-
-        bool pressingDownNow = moveInput.y < LIFT_INPUT_THRESHOLD;
-
-        // Rising edge detection - only trigger on initial press
-        if (pressingDownNow && !wasPressingDown && liftCooldownTimer <= 0f) {
-            TryLiftPartner();
-        }
-
-        wasPressingDown = pressingDownNow;
     }
 
     private void TryLiftPartner() {
@@ -320,8 +304,12 @@ public class CharacterController2D : MonoBehaviour {
     }
 
     public void ReceiveLiftBoost(float gravityScale, float duration) {
+        // Negative gravity = float up!
         rigid.gravityScale = gravityScale;
         liftGravityTimer = duration;
+
+        // ABSURD visual - scale up the player
+        transform.localScale = originalScale * liftScaleMultiplier;
     }
 
     private void OnCollisionEnter2D(Collision2D collision) {
