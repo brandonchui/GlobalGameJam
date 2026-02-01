@@ -84,7 +84,10 @@ public class CharacterController2D : MonoBehaviour {
         playerInput.actions["Jump"].canceled += OnJumpCanceled;
         playerInput.actions["Look"].performed += OnLookPerformed;
         playerInput.actions["Look"].canceled += OnLookCanceled;
+        playerInput.actions["Attack"].performed += OnAttackPerformed;
+        playerInput.actions["Attack"].canceled += OnAttackCanceled;
     }
+
 
     private void OnDisable() {
         playerInput.actions["Move"].performed -= OnMovePerformed;
@@ -93,6 +96,15 @@ public class CharacterController2D : MonoBehaviour {
         playerInput.actions["Jump"].canceled -= OnJumpCanceled;
         playerInput.actions["Look"].performed -= OnLookPerformed;
         playerInput.actions["Look"].canceled -= OnLookCanceled;
+        playerInput.actions["Attack"].performed -= OnAttackPerformed;
+        playerInput.actions["Attack"].canceled -= OnAttackCanceled;
+    }
+
+    private void OnAttackPerformed(InputAction.CallbackContext context) {
+        
+    }
+    private void OnAttackCanceled(InputAction.CallbackContext context) {
+
     }
 
     private void OnLookPerformed(InputAction.CallbackContext context) {

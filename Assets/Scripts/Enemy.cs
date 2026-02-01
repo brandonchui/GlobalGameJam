@@ -7,6 +7,15 @@ public class Enemy : MonoBehaviour {
     public float freezeDuration = 0.4f;
 
     public ParticleSystem boom;
+    float bounceSpeed;
+    float wobbleSpeed;
+
+    SpriteRenderer sr;
+    void Start() {
+        sr = GetComponentInChildren<SpriteRenderer>();
+        bounceSpeed = Random.Range(5.0f, 7.0f);
+        wobbleSpeed = Random.Range(3.0f, 5.0f);
+    }
 
     private void OnTriggerEnter2D(Collider2D collider) {
         if (collider.gameObject.CompareTag("Player")) {
@@ -33,5 +42,9 @@ public class Enemy : MonoBehaviour {
 
             Destroy(gameObject);
         }
+    }
+    void Update() {
+        sr.transform.localScale = new Vector3(1.0f, 1.0f + 0.2f * Mathf.Sin(Time.time * bounceSpeed), 0.0f);
+        sr.transform.rotation = Quaternion.Euler(0.0f, 0.0f, Mathf.Sin(Time.time * wobbleSpeed) * 10f);
     }
 }
