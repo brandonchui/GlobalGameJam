@@ -27,7 +27,7 @@ public class CharacterController2D : MonoBehaviour {
     public float lowJumpMultiplier = 2f;
 
     [Header("Lift Up Co-op Settings")]
-    public float liftGravityScale = -2f;  // Negative = float UP
+    public float liftGravityScale = 0.5f;  // Half gravity
     public ParticleSystem liftParticles;
 
     // Jump state
@@ -264,6 +264,11 @@ public class CharacterController2D : MonoBehaviour {
         }
         //grounded = hits.Length > 0;
         //timeSinceGrounded = hits.Length > 0 ? 0.0f : timeSinceGrounded + Time.deltaTime;
+
+        // Auto-release lift when partner reaches or passes our height
+        if (currentlyLifting != null && currentlyLifting.transform.position.y >= transform.position.y) {
+            ReleaseLiftPartner();
+        }
     }
 
     private void TryLiftPartner() {
