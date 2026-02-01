@@ -61,9 +61,8 @@ Shader "Custom/Reveal2D"
                 if (distance(i.worldXY, center) > radius)
                     discard;
 
-                fixed4 c = tex2D(_MainTex, i.uv);
-
-                return c * i.color;
+                fixed4 c = tex2D(_MainTex, i.uv) * i.color;
+                return fixed4(c.rgb * 3.0f, c.a);
             }
             ENDCG
         }

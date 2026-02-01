@@ -6,26 +6,24 @@ public class LevelGen : MonoBehaviour {
     public GameObject redPrefab;
     public GameObject normalPrefab;
     public GameObject ground;
-    public GameObject enemyPrefab;
+    public GameObject bombPrefab;
+    public GameObject starPowerupPrefab;
+    public GameObject jumpThroughPrefab;
 
-    [Header("Generation Settings")]
-    [Range(0f, 1f)]
-    public float enemySpawnChance = 0.4f;
-    public float width = 10;
-    public float scale = 4.5f;
-    public int batchSize = 10; // Rows to generate per batch
-    public int initialBatchSize = 5; // Shorter first batch
-    public float generateAheadDistance = 20f; // How far ahead to generate
+    float width = 10;
+    float scale = 4.5f;
+    int batchSize = 10; // Rows to generate per batch
+    float generateAheadDistance = 20f; // How far ahead to generate
 
-    private int generatedUpToRow = 0;
-    private int batchNumber = 0;
-    private GameObject leftWall;
-    private GameObject rightWall;
-    private List<GameObject> spawnedObjects = new List<GameObject>();
+    int generatedUpToRow = 0;
+    int batchNumber = 0;
+    GameObject leftWall;
+    GameObject rightWall;
+    List<GameObject> spawnedObjects = new List<GameObject>();
 
     void Start() {
         // Generate easy initial batch (shorter)
-        GenerateBatch(initialBatchSize, easy: true);
+        GenerateBatch(batchSize);
 
         // Create initial walls
         leftWall = Instantiate(normalPrefab, transform);
@@ -41,13 +39,13 @@ public class LevelGen : MonoBehaviour {
 
         // Generate more if camera is approaching the top
         if (cameraY + generateAheadDistance > generatedHeight) {
-            GenerateBatch(batchSize, easy: false);
+            GenerateBatch(batchSize);
             UpdateWalls();
         }
 
     }
 
-    void GenerateBatch(int rows, bool easy) {
+    void GenerateBatch(int rows) {
         int startRow = generatedUpToRow;
         int endRow = startRow + rows;
 
@@ -56,29 +54,25 @@ public class LevelGen : MonoBehaviour {
                 GameObject prefab;
                 Vector2 size;
 
-                if (easy) {
-                    // Easy batch: mostly normal, some revealed, all horizontal (wide)
-                    prefab = Random.value < 0.7f ? normalPrefab : (Random.value < 0.5f ? greenPrefab : redPrefab);
-                    size = new Vector2(Random.Range(2.0f, scale), 1); // Always horizontal
-                } else {
-                    // Normal batch: mixed types, varied shapes
-                    prefab = Random.value < 0.2f ? normalPrefab : Random.value < 0.5f ? greenPrefab : redPrefab;
-                    bool widerOrTall = Random.value < 0.55f;
-                    size = new Vector2(widerOrTall ? Random.Range(2.0f, scale) : 1, !widerOrTall ? Random.Range(2.0f, scale) : 1);
-                }
+                float normalChance = 0.7f - y * 0.01f; // lasts ones at about 300m at this reduction
+                prefab = Random.value < normalChance ? normalPrefab : (Random.value < 0.5f ? greenPrefab : redPrefab);
+                bool widerOrTall = Random.value < 0.55f;
+                size = new Vector2(widerOrTall ? Random.Range(2.0f, scale) : 1, !widerOrTall ? Random.Range(2.0f, scale) : 1);
 
                 GameObject go = Instantiate(prefab, transform);
                 go.transform.position = new Vector3(x - width / 2.0f + Random.value, y + Random.value, 0) * scale;
                 SetSize(go, size);
                 spawnedObjects.Add(go);
 
-                // Spawn enemy on platform (lower chance in easy batch)
-                float spawnChance = easy ? enemySpawnChance * 0.5f : enemySpawnChance;
-                if (enemyPrefab != null && Random.value < spawnChance) {
-                    Vector3 enemyPos = go.transform.position + Vector3.up * (size.y / 2f + 0.5f);
-                    var enemy = Instantiate(enemyPrefab, enemyPos, Quaternion.identity, transform);
-                    spawnedObjects.Add(enemy);
+                float itemSpawnChance = Mathf.Min(0.15f + y * 0.01f, 0.4f);
+                float starSpawnChance = Mathf.Min(0.1f + y * 0.005f, 0.2f);
+                if (Random.value < itemSpawnChance) {
+                    Vector3 pos = go.transform.position + Vector3.up * (size.y / 2f + 0.5f);
+                    var itemPrefab = Random.value < starSpawnChance ? starPowerupPrefab : bombPrefab;
+                    var obj = Instantiate(itemPrefab, pos, Quaternion.identity, transform);
+                    spawnedObjects.Add(obj);
                 }
+
             }
         }
 
