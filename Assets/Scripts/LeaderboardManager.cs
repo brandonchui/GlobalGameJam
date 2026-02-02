@@ -90,7 +90,7 @@ public class LeaderboardManager : MonoBehaviour {
         string json = PlayerPrefs.GetString(LEADERBOARD_KEY, "");
         
         score = PlayerPrefs.GetFloat("PendingScore", 0f);
-        currentScoreText.text = score.ToString();
+        currentScoreText.text = score.ToString("F1") + "m";
 
         if (string.IsNullOrEmpty(json)) {
             leaderboardData = new LeaderboardData();
