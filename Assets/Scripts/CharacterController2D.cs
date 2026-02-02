@@ -100,7 +100,7 @@ public class CharacterController2D : MonoBehaviour {
     private void OnAttackPerformed(InputAction.CallbackContext context) {
         tryToLift = true;
         if (CanLift()) {
-            AudioManager.Instance.PlayLift();
+            AudioManager.Instance.PlayLift(1.5f);
         }
     }
 
@@ -133,7 +133,7 @@ public class CharacterController2D : MonoBehaviour {
             coyoteTimer = 0f;
             jumpBufferTimer = 0f;
 
-            AudioManager.Instance.PlayJump();
+            AudioManager.Instance.PlayJump(0.8f);
         }
     }
 
