@@ -38,6 +38,8 @@ public class Enemy : MonoBehaviour {
                 boom.transform.parent = null;
                 boom.Play();
                 Destroy(boom, 5.0f);
+
+                AudioManager.Instance.PlayBomb();
             }
 
             Destroy(gameObject);

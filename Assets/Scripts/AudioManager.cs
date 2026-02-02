@@ -10,6 +10,7 @@ public class AudioManager : MonoBehaviour {
     public AudioClip jumpSound;
     public AudioClip liftSound;
     public AudioClip powerupSound;
+    public AudioClip bombSound;
     public AudioClip hitColliderSound;
 
     private void Awake() {
@@ -40,5 +41,6 @@ public class AudioManager : MonoBehaviour {
     public void PlayJump(float volume = 1.0f) => PlayOneShot(jumpSound, volume);
     public void PlayLift(float volume = 1.0f) => PlayOneShot(liftSound, volume);
     public void PlayPowerup(float volume = 1.0f) => PlayOneShot(powerupSound, volume);
+    public void PlayBomb(float volume = 1.0f) => PlayOneShot(bombSound, volume);
     public void PlayHitCollider(float volume = 1.0f) => PlayOneShot(hitColliderSound, volume);
 }

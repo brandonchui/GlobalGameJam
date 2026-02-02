@@ -23,6 +23,7 @@ public class PowerUpExpand : MonoBehaviour {
                     }
                 }
             }
+            AudioManager.Instance.PlayPowerup();
             Destroy(gameObject);
         }
     }
