@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: d8280c84d825601498a60f5753803ec3
+guid: 5a97b89de9f7f5740944d58a27a0cbea
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8199656486911564790
-    second: GGJ_2026_Character_run3_0
-  - first:
-      213: -6988976767830333930
-    second: GGJ_2026_Character_run3_1
+      213: -6720424121425282769
+    second: GGJ_2026_Character_crouch_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,11 +46,11 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 7
-  spritePivot: {x: 0.5, y: 0}
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
@@ -116,45 +113,23 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: GGJ_2026_Character_run3_0
+      name: GGJ_2026_Character_crouch_0
       rect:
         serializedVersion: 2
-        x: 5
-        y: 6
-        width: 8
-        height: 6
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: a04a8696ed7f43e80800000000000000
-      internalID: -8199656486911564790
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: GGJ_2026_Character_run3_1
-      rect:
-        serializedVersion: 2
-        x: 9
+        x: 0
         y: 0
-        width: 81
-        height: 124
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+        width: 105
+        height: 98
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 616e30aa8aa220f90800000000000000
-      internalID: -6988976767830333930
+      spriteID: f29ba7e2ed14cb2a0800000000000000
+      internalID: -6720424121425282769
       vertices: []
       indices: 
       edges: []
@@ -163,8 +138,8 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
-    internalID: 1537655665
+    spriteID: 5260a0045f278084e87324e6f17ae553
+    internalID: 0
     vertices: []
     indices: 
     edges: []
@@ -173,8 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      GGJ_2026_Character_run3_0: -8199656486911564790
-      GGJ_2026_Character_run3_1: -6988976767830333930
+      GGJ_2026_Character_crouch_0: -6720424121425282769
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
