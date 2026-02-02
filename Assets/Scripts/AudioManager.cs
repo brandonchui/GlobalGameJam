@@ -32,12 +32,13 @@ public class AudioManager : MonoBehaviour {
 
     public void PlayOneShot(AudioClip clip, float volume) {
         if (clip != null && sfxSource != null) {
+            sfxSource.pitch = Random.Range(0.9f, 1.1f);
             sfxSource.PlayOneShot(clip, volume);
         }
     }
 
-    public void PlayJump() => PlayOneShot(jumpSound);
-    public void PlayLift() => PlayOneShot(liftSound);
-    public void PlayPowerup() => PlayOneShot(powerupSound);
-    public void PlayHitCollider() => PlayOneShot(hitColliderSound);
+    public void PlayJump(float volume = 1.0f) => PlayOneShot(jumpSound, volume);
+    public void PlayLift(float volume = 1.0f) => PlayOneShot(liftSound, volume);
+    public void PlayPowerup(float volume = 1.0f) => PlayOneShot(powerupSound, volume);
+    public void PlayHitCollider(float volume = 1.0f) => PlayOneShot(hitColliderSound, volume);
 }

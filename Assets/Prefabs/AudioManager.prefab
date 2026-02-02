@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b17a7c50eec3489382b2ae8c3d56eb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  jumpSound: {fileID: 8300000, guid: ea0a9bcf10bb94477b528f006bcf4ffd, type: 3}
-  liftSound: {fileID: 8300000, guid: 7f963032d5e0c4fcb8e59f689550b306, type: 3}
+  jumpSound: {fileID: 8300000, guid: 41bc683219999ab489ea67f2b596e98a, type: 3}
+  liftSound: {fileID: 8300000, guid: cdb79f550f630b542bc0ee121bb06d47, type: 3}
   powerupSound: {fileID: 8300000, guid: 2bc75b7a4aa454fcbbe944a7745f7083, type: 3}
   hitColliderSound: {fileID: 8300000, guid: 8f3700364db854478be00ccb44b17a69, type: 3}

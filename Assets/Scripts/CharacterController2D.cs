@@ -99,6 +99,9 @@ public class CharacterController2D : MonoBehaviour {
 
     private void OnAttackPerformed(InputAction.CallbackContext context) {
         tryToLift = true;
+        if (CanLift()) {
+            AudioManager.Instance.PlayLift();
+        }
     }
 
     private void OnAttackCanceled(InputAction.CallbackContext context) {
@@ -129,6 +132,8 @@ public class CharacterController2D : MonoBehaviour {
             rigid.linearVelocity = v;
             coyoteTimer = 0f;
             jumpBufferTimer = 0f;
+
+            AudioManager.Instance.PlayJump();
         }
     }
 
@@ -274,10 +279,14 @@ public class CharacterController2D : MonoBehaviour {
             }
             else {
                 float posDiff = Mathf.Abs(p1.transform.position.y - p2.transform.position.y);
-                lower.SetLiftState(tryToLift && grounded && Mathf.Abs(moveInput.x) < 0.001f && posDiff > 0.1f);
+                lower.SetLiftState(tryToLift && CanLift() && posDiff > 0.1f);
             }
         }
 
+    }
+
+    public bool CanLift() {
+        return grounded && Mathf.Abs(moveInput.x) < 0.001f;
     }
 
     public void SetLiftState(bool lifted) {
