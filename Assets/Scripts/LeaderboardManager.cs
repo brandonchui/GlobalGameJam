@@ -60,10 +60,11 @@ public class LeaderboardManager : MonoBehaviour {
     private void OnNameSubmit(string playerName) {
         if (string.IsNullOrWhiteSpace(playerName)) return;
 
-        // TODO: Replace 0 with actual score from gameplay
-
-        AddScore(playerName, score);
-        nameInputField.text = "";
+        if (score > 0) {
+            AddScore(playerName, score);
+            nameInputField.text = "";
+            score = 0;
+        }
 
         // Clear pending score after submission
         PlayerPrefs.DeleteKey("PendingScore");
@@ -88,13 +89,14 @@ public class LeaderboardManager : MonoBehaviour {
 
     private void LoadLeaderboard() {
         string json = PlayerPrefs.GetString(LEADERBOARD_KEY, "");
-        
+
         score = PlayerPrefs.GetFloat("PendingScore", 0f);
         currentScoreText.text = score.ToString("F1") + "m";
 
         if (string.IsNullOrEmpty(json)) {
             leaderboardData = new LeaderboardData();
-        } else {
+        }
+        else {
             leaderboardData = JsonUtility.FromJson<LeaderboardData>(json);
             if (leaderboardData == null) {
                 leaderboardData = new LeaderboardData();

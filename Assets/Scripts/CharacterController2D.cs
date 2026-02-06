@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Android;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 
 [RequireComponent(typeof(PlayerInput))]
 public class CharacterController2D : MonoBehaviour {
-    public GameObject hairParticles;
+    public ParticleSystem hairParticles;
     public GameObject hitParticlesPrefab;
     public Rigidbody2D rigid { get; private set; }
     Collider2D col;
@@ -45,6 +47,7 @@ public class CharacterController2D : MonoBehaviour {
 
     public DebugCircle myCircle;
     [HideInInspector] public DebugCircle secondCircle;
+    [HideInInspector] public CharacterController2D otherBoy;
     [HideInInspector] public bool singlePlayerMode = false;
     private bool circleToggle = false;
 
@@ -53,6 +56,8 @@ public class CharacterController2D : MonoBehaviour {
     public Sprite liftSprite;
     public Sprite jumpSprite;
     public Sprite[] runSprites;
+
+    Light2D myLight;
 
     private enum AnimState {
         IDLE,
@@ -64,15 +69,31 @@ public class CharacterController2D : MonoBehaviour {
 
     AnimState animState;
 
-    //float timeSinceGrounded = 5.0f;
     bool grounded = false;
+
+    [HideInInspector] public List<Color> colors = new List<Color>();
 
     private void Awake() {
         rigid = GetComponent<Rigidbody2D>();
         col = GetComponent<Collider2D>();
         playerInput = GetComponent<PlayerInput>();
         sr = GetComponentInChildren<SpriteRenderer>();
+        myLight = GetComponentInChildren<Light2D>();
+
+        colors.Add(sr.color);
+        colors.Add(myLight.color);
+
+        var main = hairParticles.main;
+        colors.Add(main.startColor.color);
     }
+
+    void SetColors(List<Color> cols) {
+        sr.color = cols[0];
+        myLight.color = cols[1];
+        var main = hairParticles.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(cols[2]);
+    }
+
 
     private void OnEnable() {
         playerInput.actions["Move"].performed += OnMovePerformed;
@@ -161,6 +182,7 @@ public class CharacterController2D : MonoBehaviour {
             var mouse = Mouse.current;
             if (mouse != null && mouse.leftButton.wasPressedThisFrame) {
                 circleToggle = !circleToggle;
+                SetColors(!circleToggle ? colors : otherBoy.colors);
                 // Swap z-order to show active circle on top
                 if (myCircle) myCircle.transform.position = new Vector3(myCircle.transform.position.x, myCircle.transform.position.y, circleToggle ? -1 : -2);
                 if (secondCircle) secondCircle.transform.position = new Vector3(secondCircle.transform.position.x, secondCircle.transform.position.y, circleToggle ? -2 : -1);
@@ -306,6 +328,9 @@ public class CharacterController2D : MonoBehaviour {
         if (isPlatform || isPlatformWood) {
             var contact = collision.GetContact(0);
             if (!isPlatformWood || contact.normal.y > -0.5f) {
+                //tried to make particles spawn on edge of player but looks worse actually most of the time
+                //var c = col.bounds.center;
+                //c -= new Vector3(contact.normal.x * col.bounds.extents.x, contact.normal.y * col.bounds.extents.y, 0.0f);
                 Instantiate(hitParticlesPrefab, contact.point, Quaternion.FromToRotation(Vector3.up, contact.normal));
             }
         }

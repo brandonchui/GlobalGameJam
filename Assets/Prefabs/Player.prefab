@@ -238,7 +238,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 834aa90e83f48da4e900ab5e0ac3be39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterController2D
-  hairParticles: {fileID: 8774043679374540462}
+  hairParticles: {fileID: 8399963988822965900}
   hitParticlesPrefab: {fileID: 4821514396745466496, guid: 9df35ef268ce13849ba7d138501a981f, type: 3}
   groundMask:
     serializedVersion: 2
@@ -266,6 +266,7 @@ MonoBehaviour:
   - {fileID: 7122444422892522834, guid: a81e8a00e878e304198bed3c45ce2adf, type: 3}
   - {fileID: 21300000, guid: d8280c84d825601498a60f5753803ec3, type: 3}
   - {fileID: 4879623617679983331, guid: 33b2bbd58ba93de458aa15591f62d703, type: 3}
+  colors: []
 --- !u!1 &4012910049245349894
 GameObject:
   m_ObjectHideFlags: 0

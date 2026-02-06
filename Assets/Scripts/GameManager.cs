@@ -87,6 +87,7 @@ public class GameManager : MonoBehaviour {
                 controller.myCircle = circle1;
                 controller.secondCircle = circle2;
                 controller.singlePlayerMode = true;
+                controller.otherBoy = otherPlayer.GetComponent<CharacterController2D>();
             }
         }
 
