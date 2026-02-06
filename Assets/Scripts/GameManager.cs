@@ -15,83 +15,45 @@ public class GameManager : MonoBehaviour {
 
     private void Awake() {
         Instance = this;
-        DetectCoopMode();
     }
 
     private void Start() {
-        SetupPlayers();
+        SetupSinglePlayerMode();
+        DetectCoopMode();
+    }
+    private void Update() {
+        DetectCoopMode();
     }
 
     private void DetectCoopMode() {
-        // Check if any gamepad is connected
-        IsCoop = Gamepad.current != null;
-        Debug.Log(IsCoop ? "[GameManager] Co-op mode: Controller detected" : "[GameManager] Single player mode: No controller");
-    }
-
-    private void SetupPlayers() {
-        if (IsCoop) {
+        bool controllerActive = Gamepad.current != null;
+        if (controllerActive && !IsCoop) {
             SetupCoopMode();
-        } else {
+            IsCoop = true;
+        }
+        else if (!controllerActive && IsCoop) {
             SetupSinglePlayerMode();
+            IsCoop = false;
         }
     }
 
     private void SetupCoopMode() {
-        // Each player gets their own circle
-        if (player1 != null) {
-            var controller1 = player1.GetComponent<CharacterController2D>();
-            if (controller1 != null) controller1.myCircle = circle1;
-        }
-        if (player2 != null) {
-            var controller2 = player2.GetComponent<CharacterController2D>();
-            if (controller2 != null) controller2.myCircle = circle2;
-        } else if (player2 == null && player1 != null) {
-            // Disable P2 if no second player object
-            Debug.Log("[GameManager] Co-op mode but only 1 player in scene");
-        }
+        player1.gameObject.SetActive(true);
+        player2.gameObject.SetActive(true);
+
+        player1.myCircle = circle1;
+        player2.myCircle = circle2;
+
+        player1.Reset();
+        player2.Reset();
     }
 
     private void SetupSinglePlayerMode() {
-        // Find the keyboard player
-        GameObject keyboardPlayer = null;
-        GameObject otherPlayer = null;
+        player1.myCircle = circle1;
+        player1.secondCircle = circle2;
+        player1.otherBoy = player2;
 
-        var allPlayers = GameObject.FindGameObjectsWithTag("Player");
-        foreach (var p in allPlayers) {
-            var input = p.GetComponent<PlayerInput>();
-            if (input != null && input.currentControlScheme == "Keyboard&Mouse") {
-                keyboardPlayer = p;
-            } else {
-                otherPlayer = p;
-            }
-        }
-
-        // Fallback to player1 if no keyboard player found
-        if (keyboardPlayer == null) keyboardPlayer = player1.gameObject;
-
-        // Setup keyboard player with both circles
-        if (keyboardPlayer != null) {
-            var controller = keyboardPlayer.GetComponent<CharacterController2D>();
-            if (controller != null) {
-                controller.myCircle = circle1;
-                controller.secondCircle = circle2;
-                controller.singlePlayerMode = true;
-                controller.otherBoy = otherPlayer.GetComponent<CharacterController2D>();
-            }
-        }
-
-        // Disable the other player
-        if (otherPlayer != null) {
-            otherPlayer.SetActive(false);
-        }
+        player2.gameObject.SetActive(false);
     }
 
-    private void Update() {
-        // Re-check for controller connection during gameplay
-        bool controllerNow = Gamepad.current != null;
-        if (controllerNow != IsCoop) {
-            Debug.Log(controllerNow ? "[GameManager] Controller connected!" : "[GameManager] Controller disconnected!");
-            // Could trigger mode switch here if desired
-        }
-    }
 }

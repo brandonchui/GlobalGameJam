@@ -48,7 +48,6 @@ public class CharacterController2D : MonoBehaviour {
     public DebugCircle myCircle;
     [HideInInspector] public DebugCircle secondCircle;
     [HideInInspector] public CharacterController2D otherBoy;
-    [HideInInspector] public bool singlePlayerMode = false;
     private bool circleToggle = false;
 
     SpriteRenderer sr;
@@ -92,6 +91,11 @@ public class CharacterController2D : MonoBehaviour {
         myLight.color = cols[1];
         var main = hairParticles.main;
         main.startColor = new ParticleSystem.MinMaxGradient(cols[2]);
+    }
+
+    public void Reset() {
+        SetColors(colors);
+        circleToggle = false;
     }
 
 
@@ -178,7 +182,7 @@ public class CharacterController2D : MonoBehaviour {
         controlsActive = freezeTimer < 0.0f;
 
         // Single player: toggle between circles with left click
-        if (singlePlayerMode && secondCircle != null) {
+        if (!GameManager.IsCoop && secondCircle != null) {
             var mouse = Mouse.current;
             if (mouse != null && mouse.leftButton.wasPressedThisFrame) {
                 circleToggle = !circleToggle;
@@ -190,13 +194,12 @@ public class CharacterController2D : MonoBehaviour {
         }
 
         // Move active circle
-        DebugCircle activeCircle = (singlePlayerMode && circleToggle) ? secondCircle : myCircle;
+        DebugCircle activeCircle = (!GameManager.IsCoop && circleToggle) ? secondCircle : myCircle;
         if (activeCircle) {
             if (playerInput.currentControlScheme == "Keyboard&Mouse") {
                 var mouse = Mouse.current;
                 myLook = Camera.main.ScreenToWorldPoint(mouse.position.ReadValue());
-            }
-            else {
+            } else {
                 // Sync myLook with actual circle position (in case it was clamped)
                 myLook = new Vector2(activeCircle.transform.position.x, activeCircle.transform.position.y);
                 myLook += lookDirection * 0.075f;
@@ -207,8 +210,7 @@ public class CharacterController2D : MonoBehaviour {
         // Coyote time
         if (grounded) {
             coyoteTimer = coyoteTime;
-        }
-        else {
+        } else {
             coyoteTimer -= Time.deltaTime;
         }
 
@@ -234,8 +236,7 @@ public class CharacterController2D : MonoBehaviour {
         if (rigid.linearVelocity.y < 0) {
             // Falling - apply fall multiplier
             //rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.deltaTime;
-        }
-        else if (rigid.linearVelocity.y > 0 && !jumpHeld && controlsActive) {
+        } else if (rigid.linearVelocity.y > 0 && !jumpHeld && controlsActive) {
             // Rising but jump released - cut jump short (skip during knockback)
             rigid.linearVelocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.deltaTime;
         }
@@ -243,17 +244,14 @@ public class CharacterController2D : MonoBehaviour {
             if (moveInput.sqrMagnitude > 0.01) {
                 if (animState != AnimState.RUN) {
                     runTimer = 0.0f;
-                }
-                else {
+                } else {
                     runTimer += Time.deltaTime;
                 }
                 animState = AnimState.RUN;
-            }
-            else {
+            } else {
                 animState = AnimState.IDLE;
             }
-        }
-        else {
+        } else {
             animState = AnimState.JUMP;
         }
         if (moveInput.x != 0.0f) {
@@ -298,8 +296,7 @@ public class CharacterController2D : MonoBehaviour {
             var higher = p1.transform.position.y < p2.transform.position.y ? p2 : p1;
             if (lower == this) { // cant lift if youre the lower guy
                 higher.SetLiftState(false);
-            }
-            else {
+            } else {
                 float posDiff = Mathf.Abs(p1.transform.position.y - p2.transform.position.y);
                 lower.SetLiftState(tryToLift && CanLift() && posDiff > 0.1f);
             }
