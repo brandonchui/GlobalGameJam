@@ -1369,10 +1369,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player1
       objectReference: {fileID: 0}
-    - target: {fileID: 3891091317588364618, guid: 81b8a6de1fb538143a310e395741dab2, type: 3}
-      propertyPath: m_NeverAutoSwitchControlSchemes
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6391418125054923966, guid: 81b8a6de1fb538143a310e395741dab2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.8
@@ -1474,10 +1470,6 @@ PrefabInstance:
       propertyPath: myCircle
       value: 
       objectReference: {fileID: 434983892}
-    - target: {fileID: 7241202510313241644, guid: 24a3d4b21e4a9ef4682004a6fee3e036, type: 3}
-      propertyPath: m_NeverAutoSwitchControlSchemes
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 9031144974152617311, guid: 24a3d4b21e4a9ef4682004a6fee3e036, type: 3}
       propertyPath: m_Name
       value: Player2

@@ -28,6 +28,10 @@ PrefabInstance:
       propertyPath: m_DefaultControlScheme
       value: Gamepad
       objectReference: {fileID: 0}
+    - target: {fileID: 3891091317588364618, guid: 81b8a6de1fb538143a310e395741dab2, type: 3}
+      propertyPath: m_NeverAutoSwitchControlSchemes
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6391418125054923966, guid: 81b8a6de1fb538143a310e395741dab2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.81501

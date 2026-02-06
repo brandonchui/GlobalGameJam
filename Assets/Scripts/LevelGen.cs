@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+
 using UnityEngine;
 
 public class LevelGen : MonoBehaviour {
@@ -64,8 +65,7 @@ public class LevelGen : MonoBehaviour {
                         prefab = jumpThroughPrefab;
                         wider = true;
                     }
-                }
-                else {
+                } else {
                     prefab = Random.value < 0.5f ? greenPrefab : redPrefab;
                     float yellowChance = -0.1f + y * 0.01f;
                     if (Random.value < yellowChance) {
@@ -74,13 +74,13 @@ public class LevelGen : MonoBehaviour {
                 }
 
                 size = new Vector2(wider ? Random.Range(2.0f, scale) : 1, !wider ? Random.Range(2.0f, scale) : 1);
-                if (prefab == jumpThroughPrefab) {
-                    size.y = 0.5f;
-                }
-
                 GameObject go = Instantiate(prefab, transform);
                 go.transform.position = new Vector3(x - width / 2.0f + Random.value, y + Random.value, 0) * scale;
-                SetSize(go, size);
+                if (prefab == jumpThroughPrefab) {
+                    SetSizeX(go, size.x);
+                } else {
+                    SetSize(go, size);
+                }
                 spawnedObjects.Add(go);
 
                 float itemSpawnChance = Mathf.Min(0.15f + y * 0.005f, 0.4f);
@@ -128,6 +128,12 @@ public class LevelGen : MonoBehaviour {
         var box = go.GetComponent<BoxCollider2D>();
         sprite.size = size;
         box.size = size;
+    }
+    void SetSizeX(GameObject go, float x) {
+        var sprite = go.GetComponent<SpriteRenderer>();
+        var box = go.GetComponent<BoxCollider2D>();
+        sprite.size = new Vector2(x, sprite.size.y);
+        box.size = new Vector2(x, box.size.y);
     }
 
     // Draw threshold line in editor

@@ -176,7 +176,7 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
@@ -257,7 +257,7 @@ MonoBehaviour:
   liftParticles: {fileID: 2785110827400789324}
   myCircle: {fileID: 0}
   secondCircle: {fileID: 0}
-  singlePlayerMode: 0
+  otherBoy: {fileID: 0}
   idleSprite: {fileID: 979828251366776429, guid: e3a0d4d101b51284e8274d0585839f39, type: 3}
   liftSprite: {fileID: -6720424121425282769, guid: 5a97b89de9f7f5740944d58a27a0cbea, type: 3}
   jumpSprite: {fileID: 8214870140776952008, guid: ca50c8853a77f574c9d9d62b51d3f129, type: 3}

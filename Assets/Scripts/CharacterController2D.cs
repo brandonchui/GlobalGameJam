@@ -12,7 +12,7 @@ public class CharacterController2D : MonoBehaviour {
     public GameObject hitParticlesPrefab;
     public Rigidbody2D rigid { get; private set; }
     Collider2D col;
-    private PlayerInput playerInput;
+    public PlayerInput playerInput { get; private set; }
     private Vector2 moveInput;
     public LayerMask groundMask;
 
@@ -109,7 +109,6 @@ public class CharacterController2D : MonoBehaviour {
         playerInput.actions["Attack"].performed += OnAttackPerformed;
         playerInput.actions["Attack"].canceled += OnAttackCanceled;
     }
-
 
     private void OnDisable() {
         playerInput.actions["Move"].performed -= OnMovePerformed;
