@@ -6,16 +6,12 @@ public class GameManager : MonoBehaviour {
     public static GameManager Instance { get; private set; }
     public static bool IsCoop { get; private set; }
 
-    [Header("Player Setup")]
-    public Transform player1Spawn;
-    public Transform player2Spawn;
-
     [Header("Circles (for single player toggle)")]
     public DebugCircle circle1;
     public DebugCircle circle2;
 
-    public CharacterController2D player1 { get; private set; }
-    public CharacterController2D player2 { get; private set; }
+    public CharacterController2D player1;
+    public CharacterController2D player2;
 
     private void Awake() {
         Instance = this;
@@ -33,13 +29,6 @@ public class GameManager : MonoBehaviour {
     }
 
     private void SetupPlayers() {
-        // Find existing players in scene, sorted by name for consistent ordering
-        var existingPlayers = GameObject.FindGameObjectsWithTag("Player");
-        System.Array.Sort(existingPlayers, (a, b) => a.name.CompareTo(b.name));
-
-        if (existingPlayers.Length > 0) player1 = existingPlayers[0].GetComponent<CharacterController2D>();
-        if (existingPlayers.Length > 1) player2 = existingPlayers[1].GetComponent<CharacterController2D>();
-
         if (IsCoop) {
             SetupCoopMode();
         } else {

@@ -675,11 +675,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 921695060}
   m_CullTransparentMesh: 1
---- !u!4 &1217111747 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 662281299975824856, guid: 24a3d4b21e4a9ef4682004a6fee3e036, type: 3}
-  m_PrefabInstance: {fileID: 7511309008298896326}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1400222422
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -749,11 +744,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b3aafc2c95207dc43ad03c9da5db35e9, type: 3}
---- !u!4 &1451268045 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6391418125054923966, guid: 81b8a6de1fb538143a310e395741dab2, type: 3}
+--- !u!114 &1451268046 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6554232756214057286, guid: 81b8a6de1fb538143a310e395741dab2, type: 3}
   m_PrefabInstance: {fileID: 7082233434071403400}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 834aa90e83f48da4e900ab5e0ac3be39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterController2D
 --- !u!1 &1492947370
 GameObject:
   m_ObjectHideFlags: 0
@@ -836,10 +837,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ab56610102e34d138be89e5ac1633e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  player1Spawn: {fileID: 1451268045}
-  player2Spawn: {fileID: 1217111747}
   circle1: {fileID: 1715274705}
   circle2: {fileID: 434983892}
+  player1: {fileID: 1451268046}
+  player2: {fileID: 1908561187}
 --- !u!1 &1498930793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1182,6 +1183,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 520198933dbeb442080ead907039895f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DebugCircle
+--- !u!114 &1908561187 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 826210738229704736, guid: 24a3d4b21e4a9ef4682004a6fee3e036, type: 3}
+  m_PrefabInstance: {fileID: 7511309008298896326}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 834aa90e83f48da4e900ab5e0ac3be39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterController2D
 --- !u!1 &2104730634
 GameObject:
   m_ObjectHideFlags: 0
